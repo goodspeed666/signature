@@ -1086,14 +1086,10 @@
 
     // 如果是关键字签章的话，可能会存在未 loaded 的页面
     if (selectSignType == 'keyWordSign') {
-      if (
-        keyWordSignNotLoadedData
-        && Array.isArray(keyWordSignNotLoadedData)
-        && keyWordSignNotLoadedData.length >= 1
-      ) {
+      if (keyWordSignNotLoadedData && Array.isArray(keyWordSignNotLoadedData) && keyWordSignNotLoadedData.length >= 1) {
         var imgEl = document.createElement('img'),
           imgSrc = 'data:image/png;base64,' + keyWordSignNotLoadedData[0].signImg;
-
+        
         imgEl.src = imgSrc;
         imgEl.onload = function() {
           var imgWidth = this.width,
@@ -1105,9 +1101,11 @@
               pageEl = $pageEl.get(0);
 
             if (pageEl && pageEl.nodeType == 1 && $pageEl.attr('data-loaded')) {
-              var $curTextEle = $pageEl.find('.textLayer div:contains(' + signSearchVal + ')'),
+              var $curTextEle = $pageEl.find('div:contains(' + signSearchVal + ')'),
                 top = parseInt($curTextEle.css('top'), 10),
                 left = parseInt($curTextEle.css('left'), 10);
+                
+              console.log(keyWordSignNotLoadedData);
 
               var signEl = document.createElement('div'),
                 signImgEl = document.createElement('img'),
@@ -1116,7 +1114,7 @@
                 tmp = {},
                 signid = e.signid,
                 isIntegrity = e.isIntegrity;
-
+                
               signImgEl.src = imgSrc;
               signEl.className = '_addSign';
               signEl.dataset.signid = signid;
@@ -1142,7 +1140,7 @@
                 createSignStatusImg('success', signid, epTools.AfterSignPDF);
               }
               else {
-                // 创建签章状态标识 isIntegrity 为 false
+                // 创建签章状态标识   isIntegrity 为 false
                 window.isSignIntegrity = false;
                 createSignStatusImg('error', signid, epTools.AfterSignPDF);
               }
@@ -1163,7 +1161,13 @@
                 left: signElLeft,
                 pageRotation: PDFViewerApplication.pageRotation
               });
+              
+              keyWordSignNotLoadedData.splice(i, 1, undefined);
             }
+          });
+          
+          keyWordSignNotLoadedData = keyWordSignNotLoadedData.filter(function(e) {
+            return e !== undefined;
           });
         }
       }
