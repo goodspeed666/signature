@@ -147,7 +147,7 @@
 
               // 全部页面签章
               if(selectMultiPageSignType == 'all') {
-                var pagesCount = epTools.GetPageCounts();
+                var pagesCount = epTools.GetPageCount();
 
                 for(var i = 1; i <= pagesCount; i++) {
                   pages.push(i);

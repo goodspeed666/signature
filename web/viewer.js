@@ -219,7 +219,7 @@ function createApi(config) {
     GetCurrentPageIndex: function () {
       return PDFViewerApplication.page;
     },
-    GetPageCounts: function () {
+    GetPageCount: function () {
       return PDFViewerApplication.pagesCount;
     },
     OpenFile: function (path) {

@@ -203,6 +203,9 @@ PDFPrintService.prototype = {
 
 let print = window.print;
 window.print = function print() {
+  if (PDFViewerApplication.pdfViewer.pagesCount < PDFViewerApplication.pageCount) {
+    PDFViewerApplication.pdfViewer._generationPages(PDFViewerApplication.pageCount);
+  }
   if (activeService) {
     console.warn('Ignored window.print() because of a pending print job.');
     return;

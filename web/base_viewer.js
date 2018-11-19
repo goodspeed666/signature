@@ -207,7 +207,6 @@ class BaseViewer {
       // 去加载到当前页的pdf
       let firstPagePromise = this.firstPagePromise;
       let onePageRenderedCapability = createPromiseCapability();
-
       firstPagePromise.then((pdfPage) => {
         let scale = this.currentScale;
         let viewport = pdfPage.getViewport(scale * CSS_UNITS);
@@ -474,7 +473,7 @@ class BaseViewer {
     this.firstPagePromise = firstPagePromise;
 
     // Fetch a single page so we can get a viewport that will be the default
-    // viewport for all pages
+    // viewport for all pages TODO:
     firstPagePromise.then((pdfPage) => {
       let scale = this.currentScale;
       let viewport = pdfPage.getViewport(scale * CSS_UNITS);
@@ -625,7 +624,7 @@ class BaseViewer {
     this.update();
   }
 
-  _generationPages() {
+  _generationPages(pageNumber) {
     let firstPagePromise = this.firstPagePromise;
     let onePageRenderedCapability = createPromiseCapability();
 
@@ -656,7 +655,7 @@ class BaseViewer {
       };
 
       let pagesLength = this._pages.length,
-        len = pagesLength + 100;
+        len = pageNumber || pagesLength + 100;
 
       if (len > this.pdfDocument.numPages) {
         len = this.pdfDocument.numPages;
@@ -699,7 +698,7 @@ class BaseViewer {
         };
 
         let pagesLength = this._pages.length,
-          len = pagesLength + 100;
+          len = pageNumber || pagesLength + 100;
 
         if (len > this.pdfDocument.numPages) {
           len = this.pdfDocument.numPages;
