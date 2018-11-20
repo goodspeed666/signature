@@ -98,11 +98,10 @@
         img.height = sign_img.height;
 
         $(div).css({
-          left: left + 'px',
-          top: top + 'px'
+          left: left,
+          top: top
         });
-
-        $(div).append(img);
+        div.appendChild(img);
 
         var imgBase64 = imgToBase64(img) || '';
 
@@ -688,10 +687,70 @@
     },
 
     /**
-     * 获取签章的总个数
+     * 输入指定位置盖章
+     * @param {Number} pageNumber 签章页码
+     * @param {Number} left x
+     * @param {Number} top y
      */
-    getSignCount: function() {
-      return window.signCount || 0;
+    positionSign: function (pageNumber, left, top) {
+      if (typeof pageNumber !== 'number') {
+        console.error('请输入第几页签章');
+        return;
+      }
+
+      if (typeof left !== 'number') {
+        console.error('请输入 x 轴坐标');
+        return;
+      }
+
+      if (typeof top !== 'number') {
+        console.error('请输入 y 轴坐标');
+        return;
+      }
+
+      var div = document.createElement('div'),
+        img = document.createElement('img'),
+        scale = PDFViewerApplication.toolbar.pageScale;
+
+      div.className = '_addSign';
+      img.src = $signaturePreview.find('img').prop('src');
+      img.className = '_signimg';
+
+      $(div).css({
+        left: left,
+        top: top
+      });
+      div.appendChild(img);
+
+      var imgBase64 = imgToBase64(img) || '';
+
+      if (imgBase64.indexOf('base64') !== -1) {
+        imgBase64 = imgBase64.split(',')[1];
+      }
+
+      img.onload = function () {
+        var imgWidth = this.width,
+          imgHeight = this.height;
+
+        var x = (left + imgWidth / 2) / scale * 0.75,
+          y = (top + imgHeight / 2) / scale * 0.75,
+          userId = epTools.getUserId();
+
+        selectSignTypeNormal({
+          "userid": userId,
+          "sign": {
+            "signimg": imgBase64,
+            "positions": [{
+              "page": pageNumber,
+              "x": x,
+              "y": y
+            }]
+          }
+        }, {
+          top: top,
+          left: left
+        });
+      }
     }
   });
 
@@ -1122,15 +1181,18 @@
 
           $.each(keyWordSignNotLoadedData, function (i, e) {
             var pageNumber = e.page;
-            var $pageEl = $('#viewerContainer .page[data-page-number="' + pageNumber +
-            '"]'),
+            var $pageEl = $(
+                '#viewerContainer .page[data-page-number="' +
+                pageNumber +
+                '"]'),
               $curTextEle = $(
-              '#viewerContainer .page[data-page-number="' + pageNumber +
-              '"] .textLayer div:contains("' + signSearchVal +
-              '")');
+                '#viewerContainer .page[data-page-number="' +
+                pageNumber +
+                '"] .textLayer div:contains("' + signSearchVal +
+                '")');
 
             // 如果有当前关键字签章元素
-            $.each($curTextEle, function(_i, _e) {
+            $.each($curTextEle, function (_i, _e) {
               var $_e = $(_e),
                 top = parseInt($_e.css('top'), 10),
                 left = parseInt($_e.css('left'), 10);
@@ -1138,7 +1200,8 @@
               var signEl = document.createElement('div'),
                 signImgEl = document.createElement('img'),
                 signElTop = top - imgHeight / 2,
-                signElLeft = left - imgWidth / 2 + $curTextEle.outerWidth() / 2,
+                signElLeft = left - imgWidth / 2 + $curTextEle.outerWidth() /
+                2,
                 tmp = {},
                 signid = e.signid,
                 isIntegrity = e.isIntegrity;
@@ -1166,8 +1229,7 @@
               if (!!isIntegrity) {
                 // 创建签章状态标识 isIntegrity 为 true
                 createSignStatusImg('success', signid, epTools.AfterSignPDF);
-              }
-              else {
+              } else {
                 // 创建签章状态标识   isIntegrity 为 false
                 window.isSignIntegrity = false;
                 createSignStatusImg('error', signid, epTools.AfterSignPDF);
@@ -1189,14 +1251,15 @@
                 left: signElLeft,
                 pageRotation: PDFViewerApplication.pageRotation
               });
-              
+
               keyWordSignNotLoadedData.splice(i, 1, undefined);
             });
           });
 
-          keyWordSignNotLoadedData = keyWordSignNotLoadedData.filter(function(e) {
-            return e !== undefined;
-          });
+          keyWordSignNotLoadedData = keyWordSignNotLoadedData.filter(
+            function (e) {
+              return e !== undefined;
+            });
         }
       }
     }

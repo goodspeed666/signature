@@ -338,6 +338,20 @@ function createApi(config) {
       
       isShow ? signContainerEl.classList.remove('hidden') : signContainerEl.classList.add('hidden');
     },
+    /**
+     * 打印功能
+     */
+    print: function() {
+      window.print();
+    },
+    /**
+     * 获取签章总个数
+     * @returns {Number} 签章个数
+     */
+    getSignCount: function() {
+      return window.signCount || 0;
+    },
+
     keyWordSignElArray: []
   };
 
