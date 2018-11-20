@@ -37,6 +37,8 @@ var zip = require('gulp-zip');
 var webpack2 = require('webpack');
 var webpackStream = require('webpack-stream');
 var vinyl = require('vinyl-fs');
+var uglify = require("gulp-uglify");
+var gulpBabel = require("gulp-babel");
 
 var BUILD_DIR = 'build/';
 var L10N_DIR = 'l10n/';
@@ -623,6 +625,8 @@ gulp.task('generic', ['buildnumber', 'locale'], function () {
     preprocessCSS('web/viewer.css', 'generic', defines, true)
         .pipe(gulp.dest(GENERIC_DIR + 'web')),
     gulp.src('web/viewer.extend.js')
+        .pipe(gulpBabel())
+        .pipe(uglify())
         .pipe(gulp.dest(GENERIC_DIR + 'web')),
     gulp.src('web/libs/*')
         .pipe(gulp.dest(GENERIC_DIR + 'web/libs')),

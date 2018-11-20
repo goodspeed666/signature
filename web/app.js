@@ -2052,9 +2052,7 @@ verify = function verify(file) {
     contentType: false,
     dataType: 'json',
     success: function (res) {
-      var tpl = document.getElementById('tpl-annotationView').innerHTML,
-        item = '',
-        M = Mustache;
+      var item = '';
           
       window.responseSignData = res;
       window.signCount = res.length || 0;
@@ -2064,7 +2062,19 @@ verify = function verify(file) {
         e.signdate = getDate(e.signdate);
         e.signImg = 'data:image/png;base64,' + e.signImg;
         e.integrityText = e.isIntegrity ? '签名后文档未修改' : '签名后文档已修改';
-        item += M.render(tpl, e);
+        item += `<div class="annotationView-item" data-id="${e.signid}">
+                  <p>${e.signid}</p>
+                  <div>
+                    <img src="${e.signImg}" alt="" />
+                  </div>
+                  <p>${e.integrityText}</p>
+                  <p>原因：${e.reason}</p>
+                  <p>项目名称：签章工具</p>
+                  <p>用户名称：${e.cert.signer}</p>
+                  <p>印章名称：电子签章</p>
+                  <p>UK序列号：${e.cert.serialNumber}</p>
+                  <p>签章时间：${e.signdate}</p>
+                </div>`;
         
         if (!e.isIntegrity) {
           window.isSignIntegrity = false;
