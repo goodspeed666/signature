@@ -184,6 +184,7 @@
               break;
 
             case 'pagingSeal':
+              console.log(img);
               break;
 
             default:
@@ -466,6 +467,15 @@
     createSignQrCode(params, multiPageSignUrl, function (response) {
       createSignCallback(response, top, left);
     });
+  }
+
+  /**
+   * 选择的签章类型是骑缝章方法函数
+   * @param {Object} params 接口需要的请求参数
+   * @param {Object} options 一些逻辑处理上需要的参数
+   */
+  function selectSignTypePagingSeal(params, options) {
+
   }
 
   /**
