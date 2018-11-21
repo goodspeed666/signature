@@ -185,20 +185,6 @@
               });
               break;
 
-            case 'pagingSeal':
-              params = {
-                "userid": userId,
-                "sign": {
-                  "signimg": imgBase64,
-                  "position": {
-                    "pages": pages,
-                    "x": x,
-                    "y": y
-                  }
-                }
-              };
-              break;
-
             default:
               break;
           }
@@ -304,7 +290,12 @@
             signSearchVal = $('.sigsearch-input').val();
             epTools && typeof epTools.keyWordStamp == 'function' &&
               epTools.keyWordStamp(signSearchVal);
-          } else {
+          }
+          // 如果选择的签章类型是骑缝签章，则不生成 signElement
+          else if (selectSignType == 'pagingSeal') {
+            handlePagingSeal();
+          }
+          else {
             // 创建 sign_div
             createSignElement();
           }
@@ -439,6 +430,65 @@
       $(this).addClass('hidden');
       $('#qrcodeContainer').addClass('hidden');
     });
+  }
+
+  /**
+   * 处理骑缝签章
+   */
+  function handlePagingSeal() {
+    // 当前页面中 pages 元素的个数
+    const _pagesLen = PDFViewerApplication.pdfViewer._pages.length,
+      imgEl = document.createElement('img');
+
+    if (!_pagesLen > 0) {
+      return;
+    }
+
+    const $page = $viewerContainer.find('.page[data-page-number=1]');
+
+    imgEl.src = $signaturePreview.find('img').prop('src');
+    imgEl.className = '_signimg';
+    imgEl.onload = function() {
+      const imgWidth = this.width,
+        imgHeight = this.height,
+        left = $page.width() - imgWidth / 2,
+        top = $page.height() / 2 - imgHeight / 2,
+        that = this;
+
+      let ratio = 0; // 骑缝签章等分比
+
+      if (_pagesLen <= 10) {
+        ratio = imgWidth / _pagesLen;
+      }
+
+      for (let i = 1; i <= _pagesLen; i++) {
+        var $curPage = $viewerContainer.find('.page[data-page-number=' + i + ']'),
+          curPage = $curPage.get(0),
+          signEl = document.createElement('div'),
+          signImgEl = document.createElement('img');
+
+        $(signEl).css({
+          left: left,
+          top: top,
+          clip: 'rect(0px, '+ ratio +'px, '+ imgHeight +'px, 0px)'
+        });
+
+        $(signImgEl).css({
+          width: imgWidth,
+          height: imgHeight
+        });
+
+        signEl.className = '_addSign';
+        signImgEl.src = that.src;
+        signImgEl.className = '_signimg';
+        signEl.appendChild(signImgEl);
+
+        if (curPage && curPage.nodeType == 1) {
+          signEl.appendChild(imgEl);
+          curPage.appendChild(signEl);
+        }
+      }
+    };
   }
 
   /**
