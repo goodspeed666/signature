@@ -106,11 +106,6 @@
         }
 
         img.onload = function () {
-          const defaultOptions = {
-            top: top,
-            left: left
-          };
-
           const x = (left + img.width / 2) / scale * 0.75,
             y = (top + img.height / 2) / scale * 0.75;
 
@@ -119,7 +114,8 @@
           // TODO: 根据类型走不同的函数处理
           switch (selectSignType) {
             case 'normal':
-              selectSignTypeNormal({
+              // 验证二维码, 一定要扫码后方可进行签章
+              createSignQrCode({
                 "userid": userId,
                 "sign": {
                   "signimg": imgBase64,
@@ -129,7 +125,9 @@
                     "y": y
                   }]
                 }
-              }, defaultOptions);
+              }, comSignUrl, function (response) {
+                createSignCallback(response, top, left);
+              });
               break;
 
             case 'multiSign':
@@ -179,9 +177,10 @@
                   }
                 }
               };
-              
+
               // 创建签章二维码，multiSignPage
-              createSignQrCode(params, multiPageSignUrl, function (response) {
+              createSignQrCode(params, multiPageSignUrl, function (
+                response) {
                 createSignCallback(response, top, left);
               });
               break;
@@ -198,8 +197,6 @@
                   }
                 }
               };
-
-              selectSignTypePagingSeal(params, defaultOptions);
               break;
 
             default:
@@ -442,35 +439,6 @@
       $(this).addClass('hidden');
       $('#qrcodeContainer').addClass('hidden');
     });
-  }
-
-  /**
-   * 选择的签章类型是普通签章方法函数
-   * @param {Object} params 接口需要的请求参数
-   * @param {Object} options 一些逻辑处理上需要的参数
-   * signDiv {HTMLElement} 签章插入DOM的元素
-   * top {Number} 签章距离 page 顶部的距离
-   * left {Number} 签章距离 page 左侧的距离
-   * img {HTMLElement} 签章图片的DOM元素
-   * pageNumber {Number} 当前签章的页数
-   */
-  function selectSignTypeNormal(params, options) {
-    let top = options.top,
-      left = options.left;
-
-    // 验证二维码, 一定要扫码后方可进行签章
-    createSignQrCode(params, comSignUrl, function (response) {
-      createSignCallback(response, top, left);
-    });
-  }
-
-  /**
-   * 选择的签章类型是骑缝章方法函数
-   * @param {Object} params 接口需要的请求参数
-   * @param {Object} options 一些逻辑处理上需要的参数
-   */
-  function selectSignTypePagingSeal(params, options) {
-    
   }
 
   /**
@@ -737,7 +705,8 @@
           y = (top + imgHeight / 2) / scale * 0.75,
           userId = epTools.getUserId();
 
-        selectSignTypeNormal({
+        // 生成签章二维码 -> 指定位置签章
+        createSignQrCode({
           "userid": userId,
           "sign": {
             "signimg": imgBase64,
@@ -747,9 +716,8 @@
               "y": y
             }]
           }
-        }, {
-          top: top,
-          left: left
+        }, comSignUrl, function (response) {
+          createSignCallback(response, top, left);
         });
       }
     }
