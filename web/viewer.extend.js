@@ -179,12 +179,27 @@
                   }
                 }
               };
-
-              selectSignTypeMultiPage(params, defaultOptions);
+              
+              // 创建签章二维码，multiSignPage
+              createSignQrCode(params, multiPageSignUrl, function (response) {
+                createSignCallback(response, top, left);
+              });
               break;
 
             case 'pagingSeal':
-              console.log(img);
+              params = {
+                "userid": userId,
+                "sign": {
+                  "signimg": imgBase64,
+                  "position": {
+                    "pages": pages,
+                    "x": x,
+                    "y": y
+                  }
+                }
+              };
+
+              selectSignTypePagingSeal(params, defaultOptions);
               break;
 
             default:
@@ -450,32 +465,12 @@
   }
 
   /**
-   * 选择的签章类型是普通签章方法函数
-   * @param {Object} params 接口需要的请求参数
-   * @param {Object} options 一些逻辑处理上需要的参数
-   * signDiv {HTMLElement} 签章插入DOM的元素
-   * top {Number} 签章距离 page 顶部的距离
-   * left {Number} 签章距离 page 左侧的距离
-   * img {HTMLElement} 签章图片的DOM元素
-   * pageNumber {Number} 当前签章的页数
-   */
-  function selectSignTypeMultiPage(params, options) {
-    let top = options.top,
-      left = options.left;
-
-    // 创建签章二维码，multiSignPage
-    createSignQrCode(params, multiPageSignUrl, function (response) {
-      createSignCallback(response, top, left);
-    });
-  }
-
-  /**
    * 选择的签章类型是骑缝章方法函数
    * @param {Object} params 接口需要的请求参数
    * @param {Object} options 一些逻辑处理上需要的参数
    */
   function selectSignTypePagingSeal(params, options) {
-
+    
   }
 
   /**
