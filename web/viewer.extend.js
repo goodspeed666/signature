@@ -461,7 +461,7 @@
         ratio = imgWidth / _pagesLen;
       }
 
-      let bottomRect = imgHeight + 10;
+      let bottomRect = imgHeight + 13;
 
       for (let i = 0; i < _pagesLen; i++) {
         let pageNumber = i + 1,
@@ -1231,7 +1231,14 @@
 
         // 如果是骑缝签章的话，需要对应处理一下 clip: rect
         if (signType == 'pagingSeal') {
-          console.log(e.rect);
+          const rect = e.rect,
+            rightRect = rect.rightRect / e.scale * scale,
+            bottomRect = rect.bottomRect / e.scale * scale,
+            leftRect = rect.leftRect / e.scale * scale;
+
+          $signEl.css({
+            clip: 'rect(0px, '+ rightRect +'px, '+ bottomRect +'px, '+ leftRect +'px)'
+          });
         }
 
         $img.css({
