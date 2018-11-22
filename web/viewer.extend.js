@@ -451,13 +451,17 @@
     imgEl.onload = function() {
       const imgWidth = this.width,
         imgHeight = this.height,
-        left = $page.width() - imgWidth / 2,
+        left = $page.width(),
         top = $page.height() / 2 - imgHeight / 2,
         that = this;
 
       let ratio = 0; // 骑缝签章等分比
 
       if (_pagesLen <= 10) {
+        ratio = imgWidth / _pagesLen;
+      }
+      // 如果大于 10 页，那最大就是分 10 页
+      else if (_pagesLen > 10) {
         ratio = imgWidth / _pagesLen;
       }
 
@@ -470,9 +474,9 @@
           signEl = document.createElement('div'),
           signImgEl = document.createElement('img');
 
-        let resizeRect = left - i * ratio,
-          rightRect = i * ratio + ratio,
-          leftRect = i * ratio;
+        let rightRect = i * ratio + ratio,
+          leftRect = i * ratio,
+          resizeRect = left - rightRect;
 
         $(signEl).css({
           left: resizeRect,
@@ -506,7 +510,7 @@
             pageRotation: PDFViewerApplication.pageRotation,
             signType: selectSignType,
             rect: {
-              top: 0,
+              topRect: 0,
               rightRect: rightRect,
               bottomRect: bottomRect,
               leftRect: leftRect
@@ -1415,13 +1419,13 @@
   }
 
   // 每次打开文件触发该回调函数
-  let openFileCallback = function () {};
+  const openFileCallback = function () {};
 
   // 每次关闭文件触发该回调函数
-  let closeFileCallback = function () {};
+  const closeFileCallback = function () {};
 
   // 每次打开和关闭文件触发该回调函数
-  let toggleFileCallback = function () {
+  const toggleFileCallback = function () {
     signElArray = [];
     window.signCount = 0;
     window.isSignIntegrity = undefined;
