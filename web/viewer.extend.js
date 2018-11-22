@@ -461,16 +461,23 @@
         ratio = imgWidth / _pagesLen;
       }
 
-      for (let i = 1; i <= _pagesLen; i++) {
-        var $curPage = $viewerContainer.find('.page[data-page-number=' + i + ']'),
+      let bottomRect = imgHeight + 10;
+
+      for (let i = 0; i < _pagesLen; i++) {
+        let pageNumber = i + 1,
+          $curPage = $viewerContainer.find('.page[data-page-number=' + pageNumber + ']'),
           curPage = $curPage.get(0),
           signEl = document.createElement('div'),
           signImgEl = document.createElement('img');
 
+        let resizeRect = left - i * ratio,
+          rightRect = i * ratio + ratio,
+          leftRect = i * ratio;
+
         $(signEl).css({
-          left: left,
+          left: resizeRect,
           top: top,
-          clip: 'rect(0px, '+ ratio +'px, '+ imgHeight +'px, 0px)'
+          clip: 'rect(0px, '+ rightRect +'px, '+ bottomRect +'px, '+ leftRect +'px)'
         });
 
         $(signImgEl).css({
@@ -478,14 +485,33 @@
           height: imgHeight
         });
 
-        signEl.className = '_addSign';
         signImgEl.src = that.src;
+        signEl.className = '_addSign';
         signImgEl.className = '_signimg';
         signEl.appendChild(signImgEl);
 
         if (curPage && curPage.nodeType == 1) {
-          signEl.appendChild(imgEl);
           curPage.appendChild(signEl);
+
+          signElArray.push({
+            pageNumber: pageNumber,
+            signid: '',
+            signEl: signEl,
+            isIntegrity: true,
+            scale: PDFViewerApplication.toolbar.pageScale,
+            imgWidth: imgWidth,
+            imgHeight: imgHeight,
+            top: top,
+            left: resizeRect,
+            pageRotation: PDFViewerApplication.pageRotation,
+            signType: selectSignType,
+            rect: {
+              top: 0,
+              rightRect: rightRect,
+              bottomRect: bottomRect,
+              leftRect: leftRect
+            }
+          });
         }
       }
     };
@@ -567,7 +593,8 @@
           imgHeight: imgHeight,
           top: top,
           left: left,
-          pageRotation: PDFViewerApplication.pageRotation
+          pageRotation: PDFViewerApplication.pageRotation,
+          signType: selectSignType
         });
       }
     };
@@ -680,14 +707,13 @@
                       signid: signid,
                       signEl: signEl,
                       isIntegrity: isIntegrity,
-                      scale: PDFViewerApplication.toolbar
-                        .pageScale,
+                      scale: PDFViewerApplication.toolbar.pageScale,
                       imgWidth: imgWidth,
                       imgHeight: imgHeight,
                       top: signElTop,
                       left: signElLeft,
-                      pageRotation: PDFViewerApplication
-                        .pageRotation
+                      pageRotation: PDFViewerApplication.pageRotation,
+                      signType: selectSignType
                     });
                   });
                 } else {
@@ -1184,13 +1210,15 @@
           $img = $signEl.find('._signimg'),
           width, height, top, left;
 
+        const signType = e.signType;
+
         top = e.top / e.scale * scale;
         left = e.left / e.scale * scale;
         width = e.imgWidth / e.scale * scale;
         height = e.imgHeight / e.scale * scale;
 
         // 如果是多页签章得话要考虑到懒加载未插入的签章 status
-        if (selectSignType == 'multiSign' && !$signEl.find(
+        if (signType == 'multiSign' && !$signEl.find(
             '._signstatus').get(0)) {
           if (!!e.isIntegrity) {
             // TODO: 创建签章状态标识 isIntegrity 为 true
@@ -1199,6 +1227,11 @@
             // 创建签章状态标识 isIntegrity 为 false
             createSignStatusImg('error', e.signid, epTools.AfterSignPDF);
           }
+        }
+
+        // 如果是骑缝签章的话，需要对应处理一下 clip: rect
+        if (signType == 'pagingSeal') {
+          console.log(e.rect);
         }
 
         $img.css({
@@ -1348,7 +1381,8 @@
                 imgHeight: imgHeight,
                 top: signElTop,
                 left: signElLeft,
-                pageRotation: PDFViewerApplication.pageRotation
+                pageRotation: PDFViewerApplication.pageRotation,
+                signType: selectSignType
               });
 
               keyWordSignNotLoadedData.splice(i, 1, undefined);
