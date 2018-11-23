@@ -466,16 +466,11 @@
    * @param {Number} pageEnd 要循环的结束页面
    */
   function createPagingSealSign(imgEl, pageStart, pageEnd) {
-    const $page = $viewerContainer.find('.page[data-page-number=1]');
     const imgWidth = imgEl.width,
-      imgHeight = imgEl.height,
-      left = $page.width(),
-      top = $page.height() / 2 - imgHeight / 2;
+      imgHeight = imgEl.height;
 
     let ratio = pageEnd <= 10 ? imgWidth / pageEnd : imgWidth / 10;
     let bottomRect = imgHeight + 13;
-
-    console.log(pageStart, pageEnd);
 
     for (let i = pageStart; i < pageEnd; i++) {
       let pageNumber = i + 1,
@@ -483,7 +478,9 @@
           pageNumber + ']'),
         curPage = $curPage.get(0),
         signEl = document.createElement('div'),
-        signImgEl = document.createElement('img');
+        signImgEl = document.createElement('img'),
+        left = $curPage.width(),
+        top = $curPage.height() / 2 - imgHeight / 2;
 
       let baseNumber = i % 10;
       let rightRect = baseNumber * ratio + ratio,
