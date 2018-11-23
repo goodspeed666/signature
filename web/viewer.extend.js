@@ -39,6 +39,8 @@
   let blob_Url = null,
     time = null; // 轮训接口的定时器
 
+  let _pagesCount = 0; // 当前载入的 page 元素个数
+
   const SidebarView = {
     NONE: 0,
     THUMBS: 1,
@@ -301,8 +303,7 @@
             // 开启过骑缝签章
             isOpenPagingSealSign = true;
             handlePagingSeal();
-          }
-          else {
+          } else {
             // 创建 sign_div
             createSignElement();
           }
@@ -451,82 +452,85 @@
       return;
     }
 
-    const $page = $viewerContainer.find('.page[data-page-number=1]');
-
     imgEl.src = $signaturePreview.find('img').prop('src');
     imgEl.className = '_signimg';
-    imgEl.onload = function() {
-      const imgWidth = this.width,
-        imgHeight = this.height,
-        left = $page.width(),
-        top = $page.height() / 2 - imgHeight / 2,
-        that = this;
-
-      let ratio = 0; // 骑缝签章等分比
-
-      if (_pagesLen <= 10) {
-        ratio = imgWidth / _pagesLen;
-      }
-      // 如果大于 10 页，那最大就是分 10 页
-      else if (_pagesLen > 10) {
-        ratio = imgWidth / 10;
-      }
-
-      let bottomRect = imgHeight + 13;
-
-      for (let i = 0; i < _pagesLen; i++) {
-        let pageNumber = i + 1,
-          $curPage = $viewerContainer.find('.page[data-page-number=' + pageNumber + ']'),
-          curPage = $curPage.get(0),
-          signEl = document.createElement('div'),
-          signImgEl = document.createElement('img');
-
-        let baseNumber = i % 10;
-        let rightRect = baseNumber * ratio + ratio,
-          leftRect = baseNumber * ratio,
-          resizeRect = left - rightRect;
-
-        $(signEl).css({
-          left: resizeRect,
-          top: top,
-          clip: 'rect(0px, '+ rightRect +'px, '+ bottomRect +'px, '+ leftRect +'px)'
-        });
-
-        $(signImgEl).css({
-          width: imgWidth,
-          height: imgHeight
-        });
-
-        signImgEl.src = that.src;
-        signEl.className = '_addSign';
-        signImgEl.className = '_signimg';
-        signEl.appendChild(signImgEl);
-
-        if (curPage && curPage.nodeType == 1) {
-          curPage.appendChild(signEl);
-
-          signElArray.push({
-            pageNumber: pageNumber,
-            signid: '',
-            signEl: signEl,
-            isIntegrity: true,
-            scale: PDFViewerApplication.toolbar.pageScale,
-            imgWidth: imgWidth,
-            imgHeight: imgHeight,
-            top: top,
-            left: resizeRect,
-            pageRotation: PDFViewerApplication.pageRotation,
-            signType: selectSignType,
-            rect: {
-              topRect: 0,
-              rightRect: rightRect,
-              bottomRect: bottomRect,
-              leftRect: leftRect
-            }
-          });
-        }
-      }
+    imgEl.onload = function () {
+      createPagingSealSign(imgEl, 0, _pagesCount);
     };
+  }
+
+  /**
+   * 创建骑缝签章
+   * @param {HTMLElement} imgEl 签章图片元素 onload 过后的
+   * @param {Number} pageStart 要循环的起始页面
+   * @param {Number} pageEnd 要循环的结束页面
+   */
+  function createPagingSealSign(imgEl, pageStart, pageEnd) {
+    const $page = $viewerContainer.find('.page[data-page-number=1]');
+    const imgWidth = imgEl.width,
+      imgHeight = imgEl.height,
+      left = $page.width(),
+      top = $page.height() / 2 - imgHeight / 2;
+
+    let ratio = pageEnd <= 10 ? imgWidth / pageEnd : imgWidth / 10;
+    let bottomRect = imgHeight + 13;
+
+    for (let i = pageStart; i < pageEnd; i++) {
+      let pageNumber = i + 1,
+        $curPage = $viewerContainer.find('.page[data-page-number=' +
+          pageNumber + ']'),
+        curPage = $curPage.get(0),
+        signEl = document.createElement('div'),
+        signImgEl = document.createElement('img');
+
+      let baseNumber = i % 10;
+      let rightRect = baseNumber * ratio + ratio,
+        leftRect = baseNumber * ratio,
+        resizeRect = left - rightRect;
+
+      $(signEl).css({
+        left: resizeRect,
+        top: top,
+        clip: 'rect(0px, ' + rightRect + 'px, ' + bottomRect + 'px, ' +
+          leftRect + 'px)'
+      });
+
+      $(signImgEl).css({
+        width: imgWidth,
+        height: imgHeight
+      });
+
+      signImgEl.src = imgEl.src;
+      signEl.className = '_addSign';
+      signImgEl.className = '_signimg';
+      signEl.appendChild(signImgEl);
+
+      if (curPage && curPage.nodeType == 1) {
+        curPage.appendChild(signEl);
+
+        signElArray.push({
+          pageNumber: pageNumber,
+          signid: '',
+          signEl: signEl,
+          isIntegrity: true,
+          scale: PDFViewerApplication.toolbar.pageScale,
+          imgWidth: imgWidth,
+          imgHeight: imgHeight,
+          top: top,
+          left: resizeRect,
+          pageRotation: PDFViewerApplication.pageRotation,
+          signType: selectSignType,
+          rect: {
+            topRect: 0,
+            rightRect: rightRect,
+            bottomRect: bottomRect,
+            leftRect: leftRect
+          }
+        });
+      }
+
+      _pagesCount = pageEnd;
+    }
   }
 
   /**
@@ -719,12 +723,14 @@
                       signid: signid,
                       signEl: signEl,
                       isIntegrity: isIntegrity,
-                      scale: PDFViewerApplication.toolbar.pageScale,
+                      scale: PDFViewerApplication.toolbar
+                        .pageScale,
                       imgWidth: imgWidth,
                       imgHeight: imgHeight,
                       top: signElTop,
                       left: signElLeft,
-                      pageRotation: PDFViewerApplication.pageRotation,
+                      pageRotation: PDFViewerApplication
+                        .pageRotation,
                       signType: selectSignType
                     });
                   });
@@ -1249,7 +1255,8 @@
             leftRect = rect.leftRect / e.scale * scale;
 
           $signEl.css({
-            clip: 'rect(0px, '+ rightRect +'px, '+ bottomRect +'px, '+ leftRect +'px)'
+            clip: 'rect(0px, ' + rightRect + 'px, ' + bottomRect +
+              'px, ' + leftRect + 'px)'
           });
         }
 
@@ -1418,6 +1425,16 @@
 
     // 如果有骑缝签章的话，可能会存在未 loaded 的页面
     if (isOpenPagingSealSign) {
+      const curPage = PDFViewerApplication.page;
+
+      if (curPage > _pagesCount) {
+        const imgEl = document.createElement('img');
+
+        imgEl.src = $signaturePreview.find('img').prop('src');
+        imgEl.onload = function() {
+          createPagingSealSign(imgEl, _pagesCount, PDFViewerApplication.pdfViewer.pagesCount);
+        };
+      }
     }
   };
 
