@@ -455,7 +455,7 @@
     imgEl.src = $signaturePreview.find('img').prop('src');
     imgEl.className = '_signimg';
     imgEl.onload = function () {
-      createPagingSealSign(imgEl, 0, _pagesCount);
+      createPagingSealSign(imgEl, 0, _pagesLen);
     };
   }
 
@@ -474,6 +474,8 @@
 
     let ratio = pageEnd <= 10 ? imgWidth / pageEnd : imgWidth / 10;
     let bottomRect = imgHeight + 13;
+
+    console.log(pageStart, pageEnd);
 
     for (let i = pageStart; i < pageEnd; i++) {
       let pageNumber = i + 1,
