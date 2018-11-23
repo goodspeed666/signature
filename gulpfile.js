@@ -626,7 +626,6 @@ gulp.task('generic', ['buildnumber', 'locale'], function () {
         .pipe(gulp.dest(GENERIC_DIR + 'web')),
     gulp.src('web/viewer.extend.js')
         .pipe(gulpBabel())
-        .pipe(uglify())
         .pipe(gulp.dest(GENERIC_DIR + 'web')),
     gulp.src('web/libs/*')
         .pipe(gulp.dest(GENERIC_DIR + 'web/libs')),

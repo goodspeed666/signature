@@ -30,6 +30,9 @@
     signInformation = [], // 签章完毕后，保存的签章信息，key 是对应的 signId
     keyWordSignNotLoadedData = []; // 关键字签章的时候，当前关键字所在页面未签页面的合集数据
 
+  let isOpenKeyWordSign = false, // 是否使用过关键字签章，因为会存在 loaded 的情况
+    isOpenPagingSealSign = false; // 是否使用过骑缝签章，因为会存在 loaded 的情况
+
   let sign_div,
     sign_img;
 
@@ -287,12 +290,16 @@
           if (selectSignType == 'keyWordSign') {
             let epTools = window.epTools;
 
+            // 开启过关键字签章
+            isOpenKeyWordSign = true;
             signSearchVal = $('.sigsearch-input').val();
             epTools && typeof epTools.keyWordStamp == 'function' &&
               epTools.keyWordStamp(signSearchVal);
           }
           // 如果选择的签章类型是骑缝签章，则不生成 signElement
           else if (selectSignType == 'pagingSeal') {
+            // 开启过骑缝签章
+            isOpenPagingSealSign = true;
             handlePagingSeal();
           }
           else {
@@ -462,7 +469,7 @@
       }
       // 如果大于 10 页，那最大就是分 10 页
       else if (_pagesLen > 10) {
-        ratio = imgWidth / _pagesLen;
+        ratio = imgWidth / 10;
       }
 
       let bottomRect = imgHeight + 13;
@@ -474,8 +481,9 @@
           signEl = document.createElement('div'),
           signImgEl = document.createElement('img');
 
-        let rightRect = i * ratio + ratio,
-          leftRect = i * ratio,
+        let baseNumber = i % 10;
+        let rightRect = baseNumber * ratio + ratio,
+          leftRect = baseNumber * ratio,
           resizeRect = left - rightRect;
 
         $(signEl).css({
@@ -1307,7 +1315,7 @@
     });
 
     // 如果是关键字签章的话，可能会存在未 loaded 的页面
-    if (selectSignType == 'keyWordSign') {
+    if (isOpenKeyWordSign) {
       if (keyWordSignNotLoadedData && Array.isArray(
           keyWordSignNotLoadedData) && keyWordSignNotLoadedData.length >=
         1) {
@@ -1406,6 +1414,10 @@
             });
         }
       }
+    }
+
+    // 如果有骑缝签章的话，可能会存在未 loaded 的页面
+    if (isOpenPagingSealSign) {
     }
   };
 
