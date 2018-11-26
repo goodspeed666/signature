@@ -1337,6 +1337,8 @@ let PDFViewerApplication = {
       return;
     }
 
+    console.log(this.supportsPrinting);
+
     if (!this.supportsPrinting) {
       this.l10n.get('printing_not_supported', null,
         'Warning: Printing is not fully supported by ' +

@@ -203,8 +203,8 @@ PDFPrintService.prototype = {
 
 let print = window.print;
 window.print = function print() {
-  if (PDFViewerApplication.pdfViewer.pagesCount < PDFViewerApplication.pageCount) {
-    PDFViewerApplication.pdfViewer._generationPages(PDFViewerApplication.pageCount);
+  if (PDFViewerApplication.pdfViewer.pagesCount < PDFViewerApplication.pagesCount) {
+    PDFViewerApplication.pdfViewer._generationPages(PDFViewerApplication.pagesCount);
   }
   if (activeService) {
     console.warn('Ignored window.print() because of a pending print job.');
@@ -334,6 +334,7 @@ PDFPrintServiceFactory.instance = {
   supportsPrinting: true,
 
   createPrintService(pdfDocument, pagesOverview, printContainer, l10n) {
+    console.log(pdfDocument);
     if (activeService) {
       throw new Error('The print service is created and active.');
     }
