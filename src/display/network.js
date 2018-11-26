@@ -93,7 +93,6 @@ NetworkManager.prototype = {
     var pendingRequest = this.pendingRequests[xhrId] = {
       xhr,
     };
-
     xhr.open('GET', this.url);
     xhr.withCredentials = this.withCredentials;
     for (var property in this.httpHeaders) {

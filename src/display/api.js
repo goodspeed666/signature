@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 /* globals requirejs, __non_webpack_require__ */
-
 import {
   assert, createPromiseCapability, deprecated, getVerbosityLevel, info,
   InvalidPDFException, isArrayBuffer, isSameOrigin, loadJpegStream,

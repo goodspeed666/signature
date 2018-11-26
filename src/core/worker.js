@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
   arrayByteLength, arraysToBytes, assert, createPromiseCapability, info,
   InvalidPDFException, isNodeJS, MessageHandler, MissingPDFException,
@@ -320,7 +319,6 @@ var WorkerMessageHandler = {
         return; // we already processed 'test' message once
       }
       testMessageProcessed = true;
-
       // check if Uint8Array can be sent to worker
       if (!(data instanceof Uint8Array)) {
         handler.send('test', 'main', false);

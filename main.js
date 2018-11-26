@@ -9,7 +9,7 @@ function createWindow() {
       nodeIntegration: false
     }
   });
-  win.loadURL(`http://192.168.118.28:8082/signature/web/viewer.html`);
+  win.loadURL(`file:///Applications/MAMP/htdocs/signature/web/viewer.html`);
   
   // 开启调试工具
   win.webContents.openDevTools();

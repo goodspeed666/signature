@@ -19,7 +19,7 @@
 let DEFAULT_URL = '';
 
 window.epTools = {
-  ready: function(callback) {
+  ready: function (callback) {
     if (callback && typeof callback == 'function') {
       this._readyCallback = callback;
     }
@@ -166,17 +166,21 @@ function getViewerConfiguration() {
   };
 }
 
+// 判断当前环境是否是 Electron 环境
+let isElectronEnv = function() {
+
+};
+
 function webViewerLoad() {
   let config = getViewerConfiguration();
-  
-  String.prototype.replaceAll = function(replaceStr, newStr) {
+
+  String.prototype.replaceAll = function (replaceStr, newStr) {
     var str = this;
-    
+
     if (str.indexOf(replaceStr) !== -1) {
       str = this.replace(replaceStr, newStr);
       return str.replaceAll(replaceStr, newStr);
-    }
-    else {
+    } else {
       return str;
     }
   };
@@ -186,7 +190,7 @@ function webViewerLoad() {
       SystemJS.import('pdfjs-web/app'),
       SystemJS.import('pdfjs-web/genericcom'),
       SystemJS.import('pdfjs-web/pdf_print_service'),
-    ]).then(function([app, ...otherModules]) {
+    ]).then(function ([app, ...otherModules]) {
       window.PDFViewerApplication = app.PDFViewerApplication;
       app.PDFViewerApplication.run(config);
       createApi(config);
@@ -200,16 +204,16 @@ function webViewerLoad() {
 
 function createApi(config) {
   let defaultSettings = {
-    ShowToolBarButton: function(nIndex, bShow) {
+    ShowToolBarButton: function (nIndex, bShow) {
       nIndex = parseInt(nIndex, 10);
       bShow = typeof bShow == 'boolean' ? bShow : true;
 
-      var moduleEl = document.querySelector('[tabindex="'+ nIndex +'"]');
+      var moduleEl = document.querySelector('[tabindex="' + nIndex + '"]');
 
       if (moduleEl) {
-        bShow ? moduleEl.classList.remove('hidden') : moduleEl.classList.add('hidden');
-      }
-      else {
+        bShow ? moduleEl.classList.remove('hidden') : moduleEl.classList.add(
+          'hidden');
+      } else {
         alert('无此编号按钮');
       }
     },
@@ -237,18 +241,19 @@ function createApi(config) {
             items = item.items;
 
           if (~title.indexOf(text)) {
-            PDFViewerApplication.pdfOutlineViewer.linkService.navigateTo(item.dest);
+            PDFViewerApplication.pdfOutlineViewer.linkService.navigateTo(
+              item.dest);
 
             return;
-          }
-          else if (items && Array.isArray(items)) {
+          } else if (items && Array.isArray(items)) {
             let k = 0;
 
-            while(k < items.length) {
+            while (k < items.length) {
               const _item = items[k];
 
               if (~_item.title.indexOf(text)) {
-                PDFViewerApplication.pdfOutlineViewer.linkService.navigateTo(_item.dest);
+                PDFViewerApplication.pdfOutlineViewer.linkService.navigateTo(
+                  _item.dest);
 
                 return;
               }
@@ -257,73 +262,73 @@ function createApi(config) {
             }
           }
         }
-      }
-      else {
+      } else {
         alert('无书签页');
       }
     },
-    GetFilePath: function() {
+    GetFilePath: function () {
       return PDFViewerApplication.localUrl || PDFViewerApplication.url;
     },
-    CloseFile: function() {
+    CloseFile: function () {
       PDFViewerApplication.close();
     },
-    AfterSignPDF: function() {},
-    AfterDelSignature: function() {},
+    AfterSignPDF: function () {},
+    AfterDelSignature: function () {},
     /**
      * 设置暗标
      * @param {Object} str 当前字符串
      * @param {Object} darkMarkStr 暗标字符
      */
-    SetDarkMark: function(str, darkMarkStr) {      
-    	this._darkMarkOptions = {
-    		str: str,
-    		darkMarkStr: darkMarkStr || '*'
-    	};
+    SetDarkMark: function (str, darkMarkStr) {
+      this._darkMarkOptions = {
+        str: str,
+        darkMarkStr: darkMarkStr || '*'
+      };
     },
     /**
      * 设置 userId
      * @param {String} userId 接口需要的 userId
      */
-    setUserId: function(userId) {
+    setUserId: function (userId) {
       this.userId = userId ? userId : this.getLocationUserId();
     },
     /**
      * 获取 userId
      * @returns {String} userId 
      */
-    getUserId: function() {
+    getUserId: function () {
       return this.userId ? this.userId : this.getLocationUserId();
     },
-    getLocationUserId: function() {
+    getLocationUserId: function () {
       var result = window.location.search.match(/user=([^&]*)/);
 
       if (result && Array.isArray(result)) {
         return result[1];
       }
-  
+
       return '';
     },
     /**
      * 是否显示签章按钮
      * @param {Boolean} isShow 是否显示签章菜单
      */
-    isShowSignMenu: function(isShow) {
+    isShowSignMenu: function (isShow) {
       var signContainerEl = document.getElementById('signContainer');
-      
-      isShow ? signContainerEl.classList.remove('hidden') : signContainerEl.classList.add('hidden');
+
+      isShow ? signContainerEl.classList.remove('hidden') : signContainerEl
+        .classList.add('hidden');
     },
     /**
      * 打印功能
      */
-    print: function() {
+    print: function () {
       window.print();
     },
     /**
      * 获取签章总个数
      * @returns {Number} 签章个数
      */
-    getSignCount: function() {
+    getSignCount: function () {
       return window.signCount || 0;
     },
 
@@ -357,7 +362,7 @@ function extend() {
 }
 
 if (document.readyState === 'interactive' ||
-    document.readyState === 'complete') {
+  document.readyState === 'complete') {
   webViewerLoad();
 } else {
   document.addEventListener('DOMContentLoaded', webViewerLoad, true);

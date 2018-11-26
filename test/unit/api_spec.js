@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {
   buildGetDocumentParams, NodeFileReaderFactory, TEST_PDFS_PATH
 } from './test_utils';

@@ -726,6 +726,7 @@ let PDFViewerApplication = {
       });
     }
     let parameters = Object.create(null);
+    console.log(file);
     if (typeof file === 'string') { // URL
       this.setTitleUsingUrl(file);
       parameters.url = file;
@@ -762,7 +763,6 @@ let PDFViewerApplication = {
         parameters[prop] = args[prop];
       }
     }
-
     let loadingTask = getDocument(parameters);
     this.pdfLoadingTask = loadingTask;
 
@@ -1757,7 +1757,6 @@ let webViewerOpenFileViaURL;
 if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
   webViewerOpenFileViaURL = function webViewerOpenFileViaURL(file) {
     if (file && file.lastIndexOf('file:', 0) === 0) {
-      console.log('xhrxhr');
       // file:-scheme. Load the contents in the main thread because QtWebKit
       // cannot load file:-URLs in a Web Worker. file:-URLs are usually loaded
       // very quickly, so there is no need to set up progress event listeners.
@@ -1994,7 +1993,6 @@ verify = function verify(file) {
 
   $progressBar.removeClass('hidden');
   clearTime = setTimeout(function polling() {
-
     if (processVal < 100) {
       processVal += 1;
 
@@ -2113,7 +2111,6 @@ if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
     PDFViewerApplication.localUrl = evt.fileInput.value;
 
     // URL does not reflect proper document location - hiding some icons.
-    let appConfig = PDFViewerApplication.appConfig;
     let openFileCallback = window.openFileCallback;
     let toggleFileCallback = window.toggleFileCallback;
     openFileCallback && typeof openFileCallback == 'function' && openFileCallback();
