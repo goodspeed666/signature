@@ -353,33 +353,18 @@ function createApi(config) {
     },
 
     /**
-     * 获取搜索过的关键字
+     * 获取搜索状态
      * @param {Function} callback 回掉函数
      */
-    getStorageSrhVal: function(callback) {
-      let storageSearchValue = localStorage.getItem('___epPdfStorageSrhVal');
+    getSearchStatus: function(callback) {
+      const searchValue = PDFViewerApplication.findBar.findField.value;
 
-      console.log(storageSearchValue);
-      callback && typeof callback === 'function' && callback.call(this, storageSearchValue ? JSON.parse( storageSearchValue ) : null);
-    },
-
-    /**
-     * 设置搜索关键字
-     * @param {String} keyword 关键字
-     */
-    _setStorageSrhVal: function(keyword) {
-      this.getStorageSrhVal(function(value) {
-        if (value && Array.isArray(value)) {
-          if (value.indexOf(keyword) == -1) {
-            value.push(keyword);
-            localStorage.setItem('___epPdfStorageSrhVal', JSON.stringify(value));
-          }
-        }
-        else {
-          value = [keyword];
-          localStorage.setItem('___epPdfStorageSrhVal', JSON.stringify(value));
-        }
-      });
+      if (searchValue && typeof this._isFound === 'boolean') {
+        callback && typeof callback === 'function' && callback.call(this, {
+          value: searchValue,
+          isFound: this._isFound
+        });
+      }
     },
 
     keyWordSignElArray: []

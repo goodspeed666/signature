@@ -45,18 +45,14 @@ class PDFFindBar {
     }
 
     this.findField.addEventListener('input', () => {
-      // TODO: 先将此功能关闭
-      if (this.findField.value == '') {
-        this.dispatchEvent('');
-      }
+      this.dispatchEvent('');
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
-            this.dispatchEvent('');
-            epTools._setStorageSrhVal(this.findField.value);;
+            this.dispatchEvent('again', e.shiftKey);
           }
           break;
         case 27: // Escape
@@ -128,6 +124,8 @@ class PDFFindBar {
         }
         break;
     }
+
+    epTools._isFound = !notFound;
 
     if (notFound) {
       this.findField.classList.add('notFound');
