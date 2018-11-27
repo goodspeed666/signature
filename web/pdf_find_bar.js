@@ -45,15 +45,14 @@ class PDFFindBar {
     }
 
     this.findField.addEventListener('input', () => {
-      // this.dispatchEvent('');
+      // TODO: 先将此功能关闭
+      this.dispatchEvent('');
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
-            let _storageSearhVal = localStorage.getItem('searchValue');
-            console.log(_storageSearhVal);
             this.dispatchEvent('again', e.shiftKey);
           }
           break;
@@ -87,6 +86,8 @@ class PDFFindBar {
   }
 
   dispatchEvent(type, findPrev) {
+    epTools._setStorageSrhVal(this.findField.value);
+
     this.eventBus.dispatch('find', {
       source: this,
       type,
