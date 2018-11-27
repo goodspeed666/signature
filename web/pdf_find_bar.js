@@ -46,14 +46,17 @@ class PDFFindBar {
 
     this.findField.addEventListener('input', () => {
       // TODO: 先将此功能关闭
-      this.dispatchEvent('');
+      if (this.findField.value == '') {
+        this.dispatchEvent('');
+      }
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
-            this.dispatchEvent('again', e.shiftKey);
+            this.dispatchEvent('');
+            epTools._setStorageSrhVal(this.findField.value);;
           }
           break;
         case 27: // Escape
@@ -86,8 +89,6 @@ class PDFFindBar {
   }
 
   dispatchEvent(type, findPrev) {
-    epTools._setStorageSrhVal(this.findField.value);
-
     this.eventBus.dispatch('find', {
       source: this,
       type,
