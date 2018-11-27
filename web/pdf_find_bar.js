@@ -45,13 +45,15 @@ class PDFFindBar {
     }
 
     this.findField.addEventListener('input', () => {
-      this.dispatchEvent('');
+      // this.dispatchEvent('');
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
+            let _storageSearhVal = localStorage.getItem('searchValue');
+            console.log(_storageSearhVal);
             this.dispatchEvent('again', e.shiftKey);
           }
           break;
