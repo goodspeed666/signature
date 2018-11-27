@@ -166,11 +166,6 @@ function getViewerConfiguration() {
   };
 }
 
-// 判断当前环境是否是 Electron 环境
-let isElectronEnv = function() {
-
-};
-
 function webViewerLoad() {
   let config = getViewerConfiguration();
 
@@ -330,6 +325,31 @@ function createApi(config) {
      */
     getSignCount: function () {
       return window.signCount || 0;
+    },
+
+    /**
+     * @private
+     * 判断当前环境是否是在 file 协议中
+     */
+    _isFileProtocol: function() {
+      return window.location.href.indexOf('file:///') !== -1 ? true : false;
+    },
+
+    /**
+     * @private
+     * arraybuffer 转 base64
+     * @param {arraybuffer} buffer
+     */
+    _arrayBufferToBase64: function(buffer) {
+      let binary = '',
+        bytes = new Uint8Array( buffer ),
+        len = bytes.byteLength;
+
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[i] );
+      }
+
+      return window.btoa( binary );
     },
 
     keyWordSignElArray: []

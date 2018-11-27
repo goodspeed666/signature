@@ -855,22 +855,21 @@
 
     let formData = new FormData();
 
-    if (type == 'url') {
+    if (type == 'url' || type == 'base64') {
       params.pdf = {
         type: type,
         msg: msg
       };
-
-      formData.append('params', JSON.stringify(params));
     } else if (type == 'file') {
       params.pdf = {
         type: type,
         msg: ''
       };
 
-      formData.append('params', JSON.stringify(params));
       formData.append('file', msg);
     }
+
+    formData.append('params', JSON.stringify(params));
 
     $.ajax({
       type: "post",

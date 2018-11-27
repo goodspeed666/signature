@@ -726,7 +726,6 @@ let PDFViewerApplication = {
       });
     }
     let parameters = Object.create(null);
-    console.log(file);
     if (typeof file === 'string') { // URL
       this.setTitleUsingUrl(file);
       parameters.url = file;
@@ -745,7 +744,22 @@ let PDFViewerApplication = {
     // TODO: 请求 verify 接口
     if (file) {
       if (typeof file === 'string') {
-        if (file.indexOf('blob:') == -1 && !Array.isArray(file)) {
+        // 如果当前环境是 file 协议环境中
+        if (epTools._isFileProtocol()) {
+          let xhr = new XMLHttpRequest();
+
+          xhr.responseType = 'arraybuffer';
+          xhr.open('GET', file);
+          
+          xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+              verify(epTools._arrayBufferToBase64(xhr.response));
+            }
+          }
+
+          xhr.send();
+        }
+        else if (file.indexOf('blob:') == -1 && !Array.isArray(file)) {
           verify(file);
         }
       }
@@ -2015,10 +2029,16 @@ verify = function verify(file) {
   var url = verifyUrl;
   var formData = new FormData();
   if (typeof file == 'string') {
-    formData.append('type', 'url');
-    formData.append('msg', file);
+    if (epTools._isFileProtocol()) {
+      formData.append('type', 'base64');
+      epTools.type = 'base64';
+    }
+    else {
+      formData.append('type', 'url');
+      epTools.type = 'url';
+    }
 
-    epTools.type = 'url';
+    formData.append('msg', file);
   } else {
     formData.append('file', file);
     formData.append('type', 'file');
