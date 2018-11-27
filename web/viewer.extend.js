@@ -1457,6 +1457,7 @@
     window.signCount = 0;
     window.isSignIntegrity = undefined;
     epTools.downloadUrl = null;
+    epTools._isFound = false;
 
     if (epTools.keyWordSignElArray && Array.isArray(epTools.keyWordSignElArray)) {
       epTools.keyWordSignElArray = [];
