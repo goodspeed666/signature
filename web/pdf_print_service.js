@@ -334,7 +334,6 @@ PDFPrintServiceFactory.instance = {
   supportsPrinting: true,
 
   createPrintService(pdfDocument, pagesOverview, printContainer, l10n) {
-    console.log(pdfDocument);
     if (activeService) {
       throw new Error('The print service is created and active.');
     }

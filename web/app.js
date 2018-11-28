@@ -1351,8 +1351,6 @@ let PDFViewerApplication = {
       return;
     }
 
-    console.log(this.supportsPrinting);
-
     if (!this.supportsPrinting) {
       this.l10n.get('printing_not_supported', null,
         'Warning: Printing is not fully supported by ' +
@@ -1361,7 +1359,7 @@ let PDFViewerApplication = {
       });
       return;
     }
-
+    console.log(this.pdfViewer.pageViewsReady);
     // The beforePrint is a sync method and we need to know layout before
     // returning from this method. Ensure that we can get sizes of the pages.
     if (!this.pdfViewer.pageViewsReady) {

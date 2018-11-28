@@ -438,12 +438,14 @@ class BaseViewer {
     this.pagesPromise = pagesCapability.promise;
 
     pagesCapability.promise.then(() => {
-      this._pageViewsReady = true;
-      this.eventBus.dispatch('pagesloaded', {
-        source: this,
-        pagesCount,
-      });
+      
     });
+
+    this._pageViewsReady = true;
+    this.eventBus.dispatch('pagesloaded', {
+      source: this,
+      pagesCount,
+    }); 
 
     let isOnePageRenderedResolved = false;
     let onePageRenderedCapability = createPromiseCapability();
@@ -1188,6 +1190,7 @@ class BaseViewer {
    * @returns {Array} Array of objects with width/height/rotation fields.
    */
   getPagesOverview() {
+    console.log(this._pages);
     let pagesOverview = this._pages.map(function (pageView) {
       let viewport = pageView.pdfPage.getViewport(1);
       return {
