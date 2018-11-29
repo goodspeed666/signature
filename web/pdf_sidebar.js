@@ -20,8 +20,6 @@ import {
   RenderingStates
 } from './pdf_rendering_queue';
 
-const UI_NOTIFICATION_CLASS = 'pdfSidebarNotification';
-
 const SidebarView = {
   NONE: 0,
   THUMBS: 1,
