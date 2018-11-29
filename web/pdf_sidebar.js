@@ -25,7 +25,8 @@ const SidebarView = {
   THUMBS: 1,
   OUTLINE: 2,
   ATTACHMENTS: 3,
-  ANNOTATION: 4
+  ANNOTATION: 4,
+  SEARCH: 5
 };
 
 /**
@@ -83,6 +84,7 @@ class PDFSidebar {
     this.outlineView = options.outlineView;
     this.annotationView = options.annotationView;
     this.attachmentsView = options.attachmentsView;
+    this.searchView = options.searchView;
 
     this.disableNotification = options.disableNotification || false;
 
@@ -116,6 +118,10 @@ class PDFSidebar {
   
   get isAnnotationViewVisible() {
     return (this.isOpen && this.active === SidebarView.ANNOTATION);
+  }
+
+  get isSearchViewVisible() {
+    return (this.isOpen && this.active == SidebarView.SEARCH)
   }
 
   get isAttachmentsViewVisible() {
@@ -177,6 +183,7 @@ class PDFSidebar {
         this.outlineView.classList.add('hidden');
         this.annotationView.classList.add('hidden');
         this.attachmentsView.classList.add('hidden');
+        this.searchView.classList.add('hidden');
 
         if (this.isOpen && isViewChanged) {
           this._updateThumbnailViewer();
@@ -196,6 +203,7 @@ class PDFSidebar {
         this.outlineView.classList.remove('hidden');
         this.attachmentsView.classList.add('hidden');
         this.annotationView.classList.add('hidden');
+        this.searchView.classList.add('hidden');
         break;
       case SidebarView.ATTACHMENTS:
         if (!PDFViewerApplication.pdfSidebar.isOpen) {
@@ -211,6 +219,7 @@ class PDFSidebar {
         this.outlineView.classList.add('hidden');
         this.annotationView.classList.add('hidden');
         this.attachmentsView.classList.remove('hidden');
+        this.searchView.classList.add('hidden');
         break;
       case SidebarView.ANNOTATION:
         if (!PDFViewerApplication.pdfSidebar.isOpen) {
@@ -225,6 +234,22 @@ class PDFSidebar {
         this.outlineView.classList.add('hidden');
         this.annotationView.classList.remove('hidden');
         this.attachmentsView.classList.add('hidden');
+        this.searchView.classList.add('hidden');
+        break;
+      case SidebarView.SEARCH:
+        if (!PDFViewerApplication.pdfSidebar.isOpen) {
+          PDFViewerApplication.pdfSidebar.toggle();
+        } else {
+          if (PDFViewerApplication.pdfSidebar.isSearchViewVisible) {
+            PDFViewerApplication.pdfSidebar.toggle();
+          }
+        }
+
+        this.thumbnailView.classList.add('hidden');
+        this.outlineView.classList.add('hidden');
+        this.annotationView.classList.add('hidden');
+        this.attachmentsView.classList.add('hidden');
+        this.searchView.classList.remove('hidden');
         break;
       default:
         console.error('PDFSidebar_switchView: "' + view +

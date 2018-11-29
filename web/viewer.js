@@ -112,6 +112,7 @@ function getViewerConfiguration() {
       outlineView: document.getElementById('outlineView'),
       annotationView: document.getElementById('annotationView'),
       attachmentsView: document.getElementById('attachmentsView'),
+      searchView: document.getElementById('searchView')
     },
     findBar: {
       bar: document.getElementById('findbar'),
