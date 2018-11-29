@@ -125,6 +125,7 @@ function configure(PDFJS) {
 
 const DefaultExternalServices = {
   updateFindControlState(data) {},
+  updateFindMatchesCount(data) {},
   initPassiveLoading(callbacks) {},
   fallback(data, callback) {},
   reportTelemetry(data) {},
@@ -1455,6 +1456,7 @@ let PDFViewerApplication = {
     eventBus.on('documentproperties', webViewerDocumentProperties);
     eventBus.on('find', webViewerFind);
     eventBus.on('findfromurlhash', webViewerFindFromUrlHash);
+    eventBus.on('updatefindmatchescount', webViewerUpdateFindMatchesCount);
     if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
       eventBus.on('fileinputchange', webViewerFileInputChange);
     }
@@ -1529,6 +1531,7 @@ let PDFViewerApplication = {
     eventBus.off('documentproperties', webViewerDocumentProperties);
     eventBus.off('find', webViewerFind);
     eventBus.off('findfromurlhash', webViewerFindFromUrlHash);
+    eventBus.off('updatefindmatchescount', webViewerUpdateFindMatchesCount);
     if (typeof PDFJSDev === 'undefined' || PDFJSDev.test('GENERIC')) {
       eventBus.off('fileinputchange', webViewerFileInputChange);
     }
@@ -2294,6 +2297,14 @@ function webViewerFindFromUrlHash(evt) {
     highlightAll: true,
     findPrevious: false,
   });
+}
+
+function webViewerUpdateFindMatchesCount({ matchesCount, }) {
+  if (PDFViewerApplication.supportsIntegratedFind) {
+    PDFViewerApplication.externalServices.updateFindMatchesCount(matchesCount);
+  } else {
+    PDFViewerApplication.findBar.updateResultsCount(matchesCount);
+  }
 }
 
 function webViewerScaleChanging(evt) {

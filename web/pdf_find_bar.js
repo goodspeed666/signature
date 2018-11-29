@@ -125,15 +125,13 @@ class PDFFindBar {
         break;
     }
 
-    epTools._isFound = !notFound;
-
     if (notFound) {
       this.findField.classList.add('notFound');
     } else {
       this.findField.classList.remove('notFound');
     }
 
-//  this.findField.setAttribute('data-status', status);
+    this.findField.setAttribute('data-status', status);
     Promise.resolve(findMsg).then((msg) => {
       this.findMsg.textContent = msg;
       this._adjustWidth();
@@ -150,10 +148,10 @@ class PDFFindBar {
     if (!matchCount) {
       // If there are no matches, hide and reset the counter.
       this.findResultsCount.classList.add('hidden');
-      this.findResultsCount.innerHTML = '';
+      this.findResultsCount.textContent = '';
     } else {
       // Update and show the match counter.
-      this.findResultsCount.innerHTML = '共有[<em>'+ matchCount.toLocaleString() +'</em>]个结果';
+      this.findResultsCount.textContent = matchCount.toLocaleString();
       this.findResultsCount.classList.remove('hidden');
     }
     // Since `updateResultsCount` may be called from `PDFFindController`,

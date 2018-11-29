@@ -500,6 +500,8 @@ html[dir='ltr'] .doorHangerRight:before {
 }
 
 #findResultsCount {
+  display: inline-block;
+  margin-top: 10px;
   color: hsl(0, 0%, 32%);
   text-align: center;
   padding: 3px 4px;
@@ -1096,6 +1098,8 @@ html[dir='rtl'] .verticalToolbarSeparator {
 .toolbarField[type=checkbox] {
   display: inline-block;
   margin: 8px 0px;
+  vertical-align: middle;
+  margin-bottom: 14px;
 }
 
 .toolbarField.pageNumber {
@@ -2395,7 +2399,8 @@ section[data-annotation-id]:hover {
 }
 
 #findbar {
-    margin-left: 15px;
+    margin-left: 6px;
+    margin-right: 6px;
     overflow: hidden;
 }
 
@@ -2410,25 +2415,23 @@ section[data-annotation-id]:hover {
 }
 
 #findbar .searchField {
-    width: 156px;
+    width: 148px;
     height: 25px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     padding-left: 10px;
-    padding-right: 26;
+    padding-right: 26px;
 }
 
 #findbar .searchBtn {
     position: absolute;
     top: 0;
-    right: 0;
+    right: -8px;
     width: 26px;
     height: 27px;
     border: none;
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
+    background: url(./images/searchButton.png) no-repeat;
     cursor: pointer;
-    background: url('./images/icon/search.png') no-repeat 5px 6px #5292e2;
 }
 
 @media screen and(-ms-high-contrast:active),(-ms-high-contrast:none) {
@@ -2911,9 +2914,17 @@ div[tabindex] {
   cursor: pointer;
 }
 
+/* 新搜索区域的样式 */
 #searchView p {
   padding-top: 12px;
   padding-left: 15px;
   padding-bottom: 3px;
+  font-size: 12px;
   color: #999;
+}
+
+#findbarOptionsContainer div {
+  height: 22px;
+  padding-left: 10px;
+  padding-top: 5px;
 }
