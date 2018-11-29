@@ -2395,9 +2395,8 @@ section[data-annotation-id]:hover {
 }
 
 #findbar {
-    height: 58px;
-    line-height: 58px;
     margin-left: 15px;
+    overflow: hidden;
 }
 
 #findbar #findbarInputContainer {
@@ -2411,27 +2410,25 @@ section[data-annotation-id]:hover {
 }
 
 #findbar .searchField {
-    width: 119px;
-    height: 24px;
+    width: 156px;
+    height: 25px;
     border: 1px solid #e6e6e6;
     border-radius: 15px;
     padding-left: 10px;
-    padding-right: 46px;
+    padding-right: 26;
 }
 
 #findbar .searchBtn {
     position: absolute;
-    top: 19px;
-    right: 2px;
-    width: 42px;
-    height: 22px;
-    line-height: 0;
-    background-color: #64a9ed;
-    font-size: 12px;
-    color: #fff;
+    top: 0;
+    right: 0;
+    width: 26px;
+    height: 27px;
     border: none;
-    border-radius: 16px;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
     cursor: pointer;
+    background: url('./images/icon/search.png') no-repeat 5px 6px #5292e2;
 }
 
 @media screen and(-ms-high-contrast:active),(-ms-high-contrast:none) {
@@ -2912,4 +2909,11 @@ div[tabindex] {
   background-color: #64a9ed;
   color: #fff;
   cursor: pointer;
+}
+
+#searchView p {
+  padding-top: 12px;
+  padding-left: 15px;
+  padding-bottom: 3px;
+  color: #999;
 }
