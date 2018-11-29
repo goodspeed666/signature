@@ -95,7 +95,8 @@ class PDFSidebar {
     this.isInitialViewSet = false;
 
     this._hideUINotification(null);
-    this.switchView(SidebarView.THUMBS);
+    // TODO: 取消多次打开文件弹出缩略图
+    // this.switchView(SidebarView.THUMBS);
   }
 
   /**
@@ -138,7 +139,8 @@ class PDFSidebar {
       return;
     }
     let isViewPreserved = (view === this.visibleView);
-    this.switchView(view, /* forceOpen */ true);
+    // TODO: 取消打开文件自动弹出缩略图
+    // this.switchView(view, /* forceOpen */ true);
 
     if (isViewPreserved) {
       // Prevent dispatching two back-to-back `sidebarviewchanged` events,
