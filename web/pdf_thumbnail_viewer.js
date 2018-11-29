@@ -65,9 +65,9 @@ class PDFThumbnailViewer {
    */
   _scrollUpdated() {
     let visibleThumbs = this._getVisibleThumbs(),
-      last = visibleThumbs.last.id;
+      last = visibleThumbs.last && visibleThumbs.last.id;
 
-    if (last % 100 === 0 && this._thumbnails.length == last) {
+    if (last && last % 100 === 0 && this._thumbnails.length == last) {
       this._generationThumbnail();
     }
 

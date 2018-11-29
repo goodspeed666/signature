@@ -1830,7 +1830,7 @@ function webViewerPageRendered(evt) {
   if (!pageView) {
     return;
   }
-
+  
   // Use the rendered page to set the corresponding thumbnail image.
   if (PDFViewerApplication.pdfSidebar.isThumbnailViewVisible) {
     let thumbnailView = PDFViewerApplication.pdfThumbnailViewer.
