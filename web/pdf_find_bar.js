@@ -45,14 +45,17 @@ class PDFFindBar {
     }
 
     this.findField.addEventListener('input', () => {
-      this.dispatchEvent('');
+      if (this.findField.value == '') {
+        this.dispatchEvent('');
+      }
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
-            this.dispatchEvent('again', e.shiftKey);
+            this.dispatchEvent('');
+            // this.dispatchEvent('again', e.shiftKey);
           }
           break;
         case 27: // Escape
@@ -138,6 +141,27 @@ class PDFFindBar {
     });
 
     this.updateResultsCount(matchCount);
+  }
+
+  requestMatchesCount() {
+    const { pageIndex, matchIdx } = this._selected;
+    let current = 0, total = this.matchCount;
+
+    if (matchIdx !== -1) {
+      for (let i = 0; i < pageIdx; i++) {
+        current += (this.pageMatches[i] && this.pageMatches[i].length) || 0;
+      }
+      current += matchIdx + 1;
+    }
+
+    // When searching starts, this method may be called before the `pageMatches`
+    // have been counted (in `_calculateMatch`). Ensure that the UI won't show
+    // temporarily broken state when the active find result doesn't make sense.
+    if (current < 1 || current > total) {
+      current = total = 0;
+    }
+    
+    return { current, total, };
   }
 
   updateResultsCount(matchCount) {
