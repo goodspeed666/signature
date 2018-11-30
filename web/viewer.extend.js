@@ -460,7 +460,18 @@
     imgEl.src = $signaturePreview.find('img').prop('src');
     imgEl.className = '_signimg';
     imgEl.onload = function () {
-      createPagingSealSign(imgEl, 0, _pagesLen);
+      var params = {
+        'userid': epTools.getUserId(),
+        'sign': {
+          'signimg': imgToBase64(imgEl).split(',')[1]
+        }
+      };
+
+      // 骑缝签章生成二维码
+      createSignQrCode(params, pagingSealUrl, function(response) {
+
+      });
+      // createPagingSealSign(imgEl, 0, _pagesLen);
     };
   }
 

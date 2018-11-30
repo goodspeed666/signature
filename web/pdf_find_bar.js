@@ -142,14 +142,18 @@ class PDFFindBar {
 
     this.updateResultsCount(matchCount);
   }
-
+  
+  /**
+   * 加入 matchesCount 对比
+   */
   requestMatchesCount() {
-    const { pageIndex, matchIdx } = this._selected;
-    let current = 0, total = this.matchCount;
+    const findController = PDFViewerApplication.findController;
+    const { pageIdx, matchIdx } = findController.selected;
+    let current = 0, total = findController.matchCount;
 
     if (matchIdx !== -1) {
       for (let i = 0; i < pageIdx; i++) {
-        current += (this.pageMatches[i] && this.pageMatches[i].length) || 0;
+        current += (findController.pageMatches[i] && findController.pageMatches[i].length) || 0;
       }
       current += matchIdx + 1;
     }
