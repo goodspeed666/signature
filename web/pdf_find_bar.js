@@ -38,6 +38,7 @@ class PDFFindBar {
     this.findController = options.findController || null;
     this.eventBus = options.eventBus;
     this.l10n = l10n;
+    this.oldValue = '';
 
     if (this.findController === null) {
       throw new Error('PDFFindBar cannot be used without a ' +
@@ -45,19 +46,17 @@ class PDFFindBar {
     }
 
     this.findField.addEventListener('input', () => {
-      if (this.findField.value == '') {
-        this.dispatchEvent('');
-      }
+      this.dispatchEvent('');
     });
 
     this.bar.addEventListener('keydown', (e) => {
       switch (e.keyCode) {
         case 13: // Enter
           if (e.target === this.findField) {
-            this.dispatchEvent('');
-            // this.dispatchEvent('again', e.shiftKey);
+            this.dispatchEvent('again', e.shiftKey);
           }
           break;
+
         case 27: // Escape
           this.close();
           break;
@@ -142,7 +141,7 @@ class PDFFindBar {
 
     this.updateResultsCount(matchCount);
   }
-  
+
   /**
    * 加入 matchesCount 对比
    */
@@ -179,7 +178,7 @@ class PDFFindBar {
       this.findResultsCount.textContent = '';
     } else {
       // Update and show the match counter.
-      this.findResultsCount.textContent = matchCount.toLocaleString();
+      this.findResultsCount.textContent = '结果：' + this.requestMatchesCount().current + '/' + matchCount.toLocaleString();
       this.findResultsCount.classList.remove('hidden');
     }
     // Since `updateResultsCount` may be called from `PDFFindController`,
@@ -205,14 +204,6 @@ class PDFFindBar {
     this.opened = false;
     this.bar.classList.add('hidden');
     this.findController.active = false;
-  }
-
-  toggle() {
-    if (this.opened) {
-      this.close();
-    } else {
-      this.open();
-    }
   }
 
   /**

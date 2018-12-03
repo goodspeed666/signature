@@ -469,9 +469,10 @@
 
       // 骑缝签章生成二维码
       createSignQrCode(params, pagingSealUrl, function(response) {
-
+        epTools.downloadUrl = response.msg.url;
+        // 生成骑缝章
+        createPagingSealSign(imgEl, 0, _pagesLen, response.msg.verify);
       });
-      // createPagingSealSign(imgEl, 0, _pagesLen);
     };
   }
 
@@ -480,10 +481,12 @@
    * @param {HTMLElement} imgEl 签章图片元素 onload 过后的
    * @param {Number} pageStart 要循环的起始页面
    * @param {Number} pageEnd 要循环的结束页面
+   * @param {Object} verify 签章数据集合
    */
-  function createPagingSealSign(imgEl, pageStart, pageEnd) {
+  function createPagingSealSign(imgEl, pageStart, pageEnd, verify) {
     const imgWidth = imgEl.width,
-      imgHeight = imgEl.height;
+      imgHeight = imgEl.height,
+      isIntegrity = verify[0].isIntegrity;
 
     let ratio = pageEnd <= 10 ? imgWidth / pageEnd : imgWidth / 10;
     let bottomRect = imgHeight + 13;
@@ -498,6 +501,7 @@
         left = $curPage.width(),
         top = $curPage.height() / 2 - imgHeight / 2;
 
+      let signid = verify[i].signid;
       let baseNumber = i % 10;
       let rightRect = baseNumber * ratio + ratio,
         leftRect = baseNumber * ratio,
@@ -515,6 +519,7 @@
         height: imgHeight
       });
 
+      signEl.dataset.signid = verify.signid;
       signImgEl.src = imgEl.src;
       signEl.className = '_addSign';
       signImgEl.className = '_signimg';
@@ -523,9 +528,18 @@
       if (curPage && curPage.nodeType == 1) {
         curPage.appendChild(signEl);
 
+        if (!!isIntegrity) {
+          // TODO: 创建签章状态标识 isIntegrity 为 true
+          createSignStatusImg('success', signid, epTools.AfterSignPDF);
+        } else {
+          // 创建签章状态标识 isIntegrity 为 false
+          window.isSignIntegrity = false;
+          createSignStatusImg('error', signid, epTools.AfterSignPDF);
+        }
+
         signElArray.push({
           pageNumber: pageNumber,
-          signid: '',
+          signid: signid,
           signEl: signEl,
           isIntegrity: true,
           scale: PDFViewerApplication.toolbar.pageScale,
@@ -1457,7 +1471,7 @@
    * @param {String} qrcodeid 二维码标识
    */
   function mockScan(qrcodeid) {
-    $.get('http://192.168.108.217:8099/H5PDF/qrsign/mockScan?codeid=' +
+    $.get('http://192.168.108.81:8099/H5PDF2/qrsign/mockScan?codeid=' +
       qrcodeid);
   }
 
