@@ -1512,6 +1512,7 @@
     window.isSignIntegrity = undefined;
     epTools.downloadUrl = null;
     epTools._isFound = false;
+    PDFViewerApplication.findBar.findField.value = '';
 
     if (epTools.keyWordSignElArray && Array.isArray(epTools.keyWordSignElArray)) {
       epTools.keyWordSignElArray = [];

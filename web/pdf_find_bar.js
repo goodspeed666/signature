@@ -183,6 +183,21 @@ class PDFFindBar {
     // Since `updateResultsCount` may be called from `PDFFindController`,
     // ensure that the width of the findbar is always updated correctly.
     this._adjustWidth();
+    // 渲染搜索树
+    this.renderSearchTree();
+  }
+
+  /**
+   * 渲染搜索树
+   */
+  renderSearchTree() {
+    const findController = PDFViewerApplication.findController,
+      pageMatches = findController.pageMatches,
+      pageContent = findController.pageContent;
+
+    for (let i = 0, len = pageMatches.length; i < len; i++) {
+      
+    }
   }
 
   open() {

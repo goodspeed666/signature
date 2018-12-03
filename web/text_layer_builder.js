@@ -247,8 +247,6 @@ class TextLayerBuilder {
         this.findController.updateMatchPosition(pageIdx, i, textDivs,
                                                 begin.divIdx);
       }
-      
-      // TODO:
 
       // Match inside new div.
       if (!prevEnd || begin.divIdx !== prevEnd.divIdx) {
@@ -317,7 +315,7 @@ class TextLayerBuilder {
       pageMatchesLength = (this.findController.pageMatchesLength) ?
         this.findController.pageMatchesLength[this.pageIdx] || null : null;
     }
-
+    
     this.matches = this.convertMatches(pageMatches, pageMatchesLength);
     this.renderMatches(this.matches);
   }
