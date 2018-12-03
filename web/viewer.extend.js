@@ -843,6 +843,30 @@
           createSignCallback(response, top, left);
         });
       }
+    },
+
+    /**
+     * 搜索关键字
+     * @param {String} keyword 搜索内容
+     */
+    search: function(keyword) {
+      if (!window.PDFViewerApplication) {
+        console.error('请确保 pdf 加载完毕再调用此 api');
+        return;
+      }
+
+      let findBar = PDFViewerApplication.findBar;
+
+      findBar.findField.value = keyword;
+      findBar.eventBus.dispatch('find', {
+        source: findBar,
+        type: '',
+        query: keyword,
+        caseSensitive: findBar.caseSensitive.checked,
+        phraseSearch: true,
+        highlightAll: findBar.highlightAll.checked,
+        findPrevious: false,
+      });
     }
   });
 

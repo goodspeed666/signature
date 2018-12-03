@@ -38,7 +38,6 @@ class PDFFindBar {
     this.findController = options.findController || null;
     this.eventBus = options.eventBus;
     this.l10n = l10n;
-    this.oldValue = '';
 
     if (this.findController === null) {
       throw new Error('PDFFindBar cannot be used without a ' +
