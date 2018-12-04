@@ -445,8 +445,10 @@
     });
 
     // 点击搜索树
-    $(PDFViewerApplication.appConfig.findBar.findBarSearchTree).on('click', '.findbarSearchTree-item', function() {
+    $('#findbarSearchTree').on('click', '.findbarSearchTree-item', function() {
+      let $this = $(this);
 
+      $this.addClass('active').siblings('.findbarSearchTree-item').removeClass('active');
     });
   }
 
