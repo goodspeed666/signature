@@ -124,6 +124,7 @@ function getViewerConfiguration() {
       findStatusIcon: document.getElementById('findStatusIcon'),
       findPreviousButton: document.getElementById('findPrevious'),
       findNextButton: document.getElementById('findNext'),
+      findBarSearchTree: document.getElementById('findbarSearchTree')
     },
     passwordOverlay: {
       overlayName: 'passwordOverlay',

@@ -2034,10 +2034,6 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   *+height: 1%;
 }
 
-.hidden {
-  display: none;
-}
-
 .signpad-container {
   position: absolute;
   top: 50%;
@@ -2399,8 +2395,6 @@ section[data-annotation-id]:hover {
 }
 
 #findbar {
-    margin-left: 6px;
-    margin-right: 6px;
     overflow: hidden;
 }
 
@@ -2915,7 +2909,12 @@ div[tabindex] {
 }
 
 /* 新搜索区域的样式 */
-#searchView p {
+#searchView {
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+#searchView p.title {
   padding-top: 12px;
   padding-left: 15px;
   padding-bottom: 3px;
@@ -2927,4 +2926,35 @@ div[tabindex] {
   height: 22px;
   padding-left: 10px;
   padding-top: 5px;
+}
+
+#findbarSearchTree .findbarSearchTree-item {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#findbarSearchTree .findbarSearchTree-item .findbarSearchTree-item--icon {
+  display: inline-block;
+  width: 10px;
+  height: 11px;
+  vertical-align: middle;
+  margin-bottom: 2px;
+  background: url('./images/icon/searchTree.png') no-repeat;
+}
+
+#findbarSearchTree .findbarSearchTree-item:hover {
+  text-decoration: underline;
+}
+
+#findbarSearchTree .findbarSearchTree-item .findbarSearchTree-item--icon.active {
+  background: url('./images/icon/searchTreeChoice.png') no-repeat;
+}
+
+.visibilityHidden {
+  visibility: hidden;
 }

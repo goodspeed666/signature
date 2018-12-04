@@ -79,30 +79,33 @@
         <div id="annotationView" class="hidden">
         </div>
         <div id="searchView" class="">
-          <p>您要搜索哪些字或词组？</p>
+          <p class="title">您要搜索哪些字或词组？</p>
           <div id="findbar" tabindex="25">
-              <div id="findbarInputContainer">
-                <input id="findInput" class="searchField" placeholder="请输入...">
-                <button class="searchBtn" id="findBtn"></button>
+            <div id="findbarInputContainer">
+              <input id="findInput" class="searchField" placeholder="请输入...">
+              <button class="searchBtn" id="findBtn"></button>
+            </div>
+            <div class="findToolbarButton hidden">
+              <em class="findPrevious" id="findPrevious"></em>
+              <em class="findNext" id="findNext"></em>
+            </div>
+            <div id="findbarOptionsContainer">
+              <div>
+                <input type="checkbox" id="findHighlightAll" class="toolbarField" checked>
+                <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">全词匹配</label>
+                </div>
+              <div>
+                <input type="checkbox" id="findMatchCase" class="toolbarField">
+                <label for="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">大小写敏感</label>
               </div>
-              <div class="findToolbarButton hidden">
-                <em class="findPrevious" id="findPrevious"></em>
-                <em class="findNext" id="findNext"></em>
-              </div>
-              <div id="findbarOptionsContainer">
-                  <div>
-                      <input type="checkbox" id="findHighlightAll" class="toolbarField" checked>
-                      <label for="findHighlightAll" class="toolbarLabel" data-l10n-id="find_highlight">全词匹配</label>
-                  </div>
-                  <div>
-                      <input type="checkbox" id="findMatchCase" class="toolbarField">
-                      <label for="findMatchCase" class="toolbarLabel" data-l10n-id="find_match_case_label">大小写敏感</label>
-                  </div>
-                <span id="findResultsCount" class="toolbarLabel hidden"></span>
+                <span id="findResultsCount" class="toolbarLabel visibilityHidden"></span>
               </div>
               <div id="findbarMessageContainer" class="hidden">
                 <span id="findMsg" class="toolbarLabel"></span>
               </div>
+          </div>
+
+          <div id="findbarSearchTree">
           </div>
         </div>
         <div id="attachmentsView" class="hidden">

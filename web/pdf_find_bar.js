@@ -37,6 +37,7 @@ class PDFFindBar {
     this.findNextButton = options.findNextButton || null;
     this.findController = options.findController || null;
     this.eventBus = options.eventBus;
+    this.findBarSearchTree = options.findBarSearchTree;
     this.l10n = l10n;
 
     if (this.findController === null) {
@@ -173,31 +174,55 @@ class PDFFindBar {
 
     if (!matchCount) {
       // If there are no matches, hide and reset the counter.
-      this.findResultsCount.classList.add('hidden');
-      this.findResultsCount.textContent = '';
+      this.findResultsCount.classList.add('visibilityHidden');
+      this.findBarSearchTree.classList.add('hidden');
+      this.findResultsCount.innerHTML = '';
+      this.findBarSearchTree.innerHTML = '';
     } else {
       // Update and show the match counter.
-      this.findResultsCount.textContent = '结果：' + this.requestMatchesCount().current + '/' + matchCount.toLocaleString();
-      this.findResultsCount.classList.remove('hidden');
+      let currentIdx = this.requestMatchesCount().current;
+
+      this.findResultsCount.innerHTML = '结果：<span style="color: #4788d8;">' + currentIdx + '</span>/' + matchCount.toLocaleString();
+      this.findResultsCount.classList.remove('visibilityHidden');
+      this.findBarSearchTree.classList.remove('hidden');
+      // 有搜索结果的话，就渲染搜索树
+      this._renderSearchTree(currentIdx);
     }
     // Since `updateResultsCount` may be called from `PDFFindController`,
     // ensure that the width of the findbar is always updated correctly.
     this._adjustWidth();
-    // 渲染搜索树
-    this.renderSearchTree();
   }
 
   /**
-   * 渲染搜索树
+   * @private
+   * @param {Number} currentIdx 当前选中第几个
    */
-  renderSearchTree() {
-    const findController = PDFViewerApplication.findController,
-      pageMatches = findController.pageMatches,
-      pageContent = findController.pageContent;
+  _renderSearchTree(currentIdx) {
+    const searchTree = PDFViewerApplication.findController.searchTree;
+    let result = '';
 
-    for (let i = 0, len = pageMatches.length; i < len; i++) {
-      
+    for (let i = 0, len = searchTree.length; i < len; i++) {
+      let item = searchTree[i];
+      let query = item.query;
+      let content = item.content;
+
+      if (i + 1 === currentIdx) {
+        result += 
+        `<div class="findbarSearchTree-item" title="${content}">
+          <i class="findbarSearchTree-item--icon active"></i>
+          (P${item.page})${content.replace(new RegExp(query), '<span style="background-color: #f8f180;">'+ query +'</span>')}
+        </div>`;
+      }
+      else {
+        result += 
+      `<div class="findbarSearchTree-item">
+        <i class="findbarSearchTree-item--icon"></i>
+        (P${item.page})${content.replace(new RegExp(query), '<span style="background-color: #f8f180;">'+ query +'</span>')}
+      </div>`;
+      }
     }
+
+    this.findBarSearchTree.innerHTML = result;
   }
 
   open() {

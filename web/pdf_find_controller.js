@@ -66,6 +66,7 @@ class PDFFindController {
     this.pageContents = []; // Stores the text for each page.
     this.pageMatches = [];
     this.pageMatchesLength = null;
+    this.searchTree = []; // Data for searchTree
     this.matchCount = 0;
     this.selected = { // Currently selected match.
       pageIdx: -1,
@@ -147,11 +148,17 @@ class PDFFindController {
     let matches = [];
     let queryLen = query.length;
     let matchIdx = -queryLen;
+    let searchTree = this.searchTree;
     while (true) {
       matchIdx = pageContent.indexOf(query, matchIdx + queryLen);
       if (matchIdx === -1) {
         break;
       }
+      searchTree.push({
+        page: pageIndex + 1,
+        query: query,
+        content: pageContent.slice(matchIdx, matchIdx + queryLen + 50)
+      });
       matches.push(matchIdx);
     }
     this.pageMatches[pageIndex] = matches;
@@ -312,6 +319,7 @@ class PDFFindController {
       this.hadMatch = false;
       this.resumePageIdx = null;
       this.pageMatches = [];
+      this.searchTree = [];
       this.matchCount = 0;
       this.pageMatchesLength = null;
 
