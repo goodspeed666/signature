@@ -215,7 +215,7 @@ class PDFFindBar {
       }
       else {
         result += 
-      `<div class="findbarSearchTree-item" data-pageidx="${item.page}" data-matchidx="${item.matchIdx}">
+      `<div class="findbarSearchTree-item" data-pageidx="${item.page}" data-matchidx="${item.matchIdx}" title="${content}">
         <i class="findbarSearchTree-item--icon"></i>
         (P${item.page})${content.replace(new RegExp(query, 'g'), '<span style="background-color: #f8f180;">'+ query +'</span>')}
       </div>`;

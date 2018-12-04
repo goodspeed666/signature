@@ -278,7 +278,6 @@ class PDFFindController {
 
     this._firstPagePromise.then(() => {
       this.extractText();
-
       clearTimeout(this.findTimeout);
       if (cmd === 'find') {
         // Trigger the find action with a small delay to avoid starting the
@@ -304,9 +303,9 @@ class PDFFindController {
     }
   }
 
-  nextMatch() {
+  nextMatch(pageIdx, matchIdx) {
     let previous = this.state.findPrevious;
-    let currentPageIndex = this.pdfViewer.currentPageNumber - 1;
+    let currentPageIndex = pageIdx || this.pdfViewer.currentPageNumber - 1;
     let numPages = this.pdfViewer.pagesCount;
 
     this.active = true;
@@ -351,6 +350,14 @@ class PDFFindController {
     }
 
     let offset = this.offset;
+
+    if (pageIdx && matchIdx) {
+      this.offset.pageIdx = pageIdx;
+      this.offset.matchIdx = matchIdx;
+    }
+
+    console.log(this.offset);
+    console.log(this.selected);
     // Keep track of how many pages we should maximally iterate through.
     this.pagesToSearch = numPages;
     // If there's already a `matchIdx` that means we are iterating through a
@@ -442,6 +449,7 @@ class PDFFindController {
   }
 
   advanceOffsetPage(previous) {
+    console.log(previous);
     let offset = this.offset;
     let numPages = this.extractTextPromises.length;
     offset.pageIdx = (previous ? offset.pageIdx - 1 : offset.pageIdx + 1);

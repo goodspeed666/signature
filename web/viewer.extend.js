@@ -575,6 +575,7 @@
    * @param  {[Number]} left 签章距离左侧的距离
    */
   function createSignCallback(response, top, left) {
+    console.log(response);
     let verify = response.msg.verify,
       imgEl = document.createElement('img'),
       imgSrc = 'data:image/png;base64,' + verify[0].signImg;
@@ -588,6 +589,7 @@
         imgHeight = this.height;
 
       for (let i = 0, len = verify.length; i < len; i++) {
+        console.log(123);
         let signEl = document.createElement('div'),
           signImgEl = document.createElement('img'),
           item = verify[i],
@@ -634,7 +636,7 @@
         }
 
         // 添加到数字签名区域
-        addToAnnotationView(item);
+        // addToAnnotationView(item);
         signElArray.push({
           pageNumber: pageNumber,
           signid: signid,
@@ -1502,7 +1504,7 @@
    * @param {String} qrcodeid 二维码标识
    */
   function mockScan(qrcodeid) {
-    $.get('http://192.168.108.81:8099/H5PDF2/qrsign/mockScan?codeid=' +
+    $.get('http://192.168.108.217:8099/H5PDF/qrsign/mockScan?codeid=' +
       qrcodeid);
   }
 
