@@ -208,14 +208,14 @@ class PDFFindBar {
 
       if (i + 1 === currentIdx) {
         result += 
-        `<div class="findbarSearchTree-item" title="${content}">
-          <i class="findbarSearchTree-item--icon active"></i>
+        `<div class="findbarSearchTree-item active" data-pageidx="${item.pageIdx}" data-matchidx="${item.matchIdx}" title="${content}">
+          <i class="findbarSearchTree-item--icon"></i>
           (P${item.page})${content.replace(new RegExp(query), '<span style="background-color: #f8f180;">'+ query +'</span>')}
         </div>`;
       }
       else {
         result += 
-      `<div class="findbarSearchTree-item">
+      `<div class="findbarSearchTree-item" data-pageidx="${item.pageIdx}" data-matchidx="${item.matchIdx}">
         <i class="findbarSearchTree-item--icon"></i>
         (P${item.page})${content.replace(new RegExp(query), '<span style="background-color: #f8f180;">'+ query +'</span>')}
       </div>`;

@@ -157,6 +157,7 @@ class PDFFindController {
       searchTree.push({
         page: pageIndex + 1,
         query: query,
+        matchIdx: matchIdx,
         content: pageContent.slice(matchIdx, matchIdx + queryLen + 50)
       });
       matches.push(matchIdx);

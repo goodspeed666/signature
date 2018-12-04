@@ -2363,6 +2363,7 @@ section[data-annotation-id]:hover {
   left: 0;
   right: 0;
   background-color: #dedee0;
+  z-index: 1009;
 }
 
 #toolbarViewer .toolbar-item {
@@ -2947,11 +2948,12 @@ div[tabindex] {
   background: url('./images/icon/searchTree.png') no-repeat;
 }
 
-#findbarSearchTree .findbarSearchTree-item:hover {
+#findbarSearchTree .findbarSearchTree-item:hover,
+#findbarSearchTree .findbarSearchTree-item.active {
   text-decoration: underline;
 }
 
-#findbarSearchTree .findbarSearchTree-item .findbarSearchTree-item--icon.active {
+#findbarSearchTree .findbarSearchTree-item.active .findbarSearchTree-item--icon {
   background: url('./images/icon/searchTreeChoice.png') no-repeat;
 }
 
