@@ -7,7 +7,7 @@
 git到本地：
 
 ```
-git https://github.com/Saberization/signature.git
+git clone https://github.com/Saberization/signature.git
 ```
 
 安装依赖：
