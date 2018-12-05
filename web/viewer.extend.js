@@ -445,10 +445,11 @@
     });
 
     // 点击搜索树
-    $('#findbarSearchTree').on('click', '.findbarSearchTree-item', function() {
+    $('#findbarSearchTree').on('click', '.findbarSearchTree-item', function () {
       let $this = $(this);
 
-      $this.addClass('active').siblings('.findbarSearchTree-item').removeClass('active');
+      $this.addClass('active').siblings('.findbarSearchTree-item').removeClass(
+        'active');
     });
   }
 
@@ -475,7 +476,7 @@
       };
 
       // 骑缝签章生成二维码
-      createSignQrCode(params, pagingSealUrl, function(response) {
+      createSignQrCode(params, pagingSealUrl, function (response) {
         epTools.downloadUrl = response.msg.url;
         // 生成骑缝章
         createPagingSealSign(imgEl, 0, _pagesLen, response.msg.verify);
@@ -575,7 +576,6 @@
    * @param  {[Number]} left 签章距离左侧的距离
    */
   function createSignCallback(response, top, left) {
-    console.log(response);
     let verify = response.msg.verify,
       imgEl = document.createElement('img'),
       imgSrc = 'data:image/png;base64,' + verify[0].signImg;
@@ -588,15 +588,17 @@
       let imgWidth = this.width,
         imgHeight = this.height;
 
+      let result = '';
+
       for (let i = 0, len = verify.length; i < len; i++) {
-        console.log(123);
         let signEl = document.createElement('div'),
           signImgEl = document.createElement('img'),
           item = verify[i],
           signid = item.signid,
           pageNumber = item.page,
           tmp = {},
-          isIntegrity = item.isIntegrity;
+          isIntegrity = item.isIntegrity,
+          signDate = getDate(item.signdate);
 
         tmp[signid] = item;
         signInformation.push(tmp);
@@ -635,8 +637,21 @@
           }
         }
 
-        // 添加到数字签名区域
-        // addToAnnotationView(item);
+        result +=
+          `<div class="annotationView-item" data-id="${signid}">
+            <p>${signid}</p>
+            <div>
+              <img src="${imgSrc}" alt="" />
+            </div>
+            <p>${item.integrityText || ''}</p>
+            <p>原因：${item.reason}</p>
+            <p>项目名称：签章工具</p>
+            <p>用户名称：${item.cert.signer}</p>
+            <p>印章名称：电子签章</p>
+            <p>UK序列号：${item.cert.serialNumber}</p>
+            <p>签章时间：${signDate}</p>
+          </div>`;
+
         signElArray.push({
           pageNumber: pageNumber,
           signid: signid,
@@ -650,6 +665,10 @@
           pageRotation: PDFViewerApplication.pageRotation,
           signType: selectSignType
         });
+      }
+
+      if (result !== '') {
+        PDFViewerApplication.appConfig.sidebar.annotationView.innerHTML += result;
       }
     };
   }
@@ -689,13 +708,16 @@
             let imgWidth = this.width,
               imgHeight = this.height;
 
+            let result = '';
+
             $.each(verify, function (i, e) {
               let pageNumber = e.page,
                 isIntegrity = e.isIntegrity,
                 $pageEl = $viewerContainer.find(
                   '.page[data-page-number=' + pageNumber +
                   ']'),
-                pageEl = $pageEl.get(0);
+                pageEl = $pageEl.get(0),
+                signDate = getDate(e.signdate);
 
               if (pageEl && pageEl.nodeType == 1) {
                 // 有关键字的页面已经加载的话
@@ -753,9 +775,21 @@
                     }
 
                     window.signCount += 1;
+                    result +=
+                      `<div class="annotationView-item" data-id="${signid}">
+                        <p>${signid}</p>
+                        <div>
+                          <img src="${imgSrc}" alt="" />
+                        </div>
+                        <p>${e.integrityText || ''}</p>
+                        <p>原因：${e.reason}</p>
+                        <p>项目名称：签章工具</p>
+                        <p>用户名称：${e.cert.signer}</p>
+                        <p>印章名称：电子签章</p>
+                        <p>UK序列号：${e.cert.serialNumber}</p>
+                        <p>签章时间：${signDate}</p>
+                      </div>`;
 
-                    // 添加到数字签名区域
-                    addToAnnotationView(e);
                     signElArray.push({
                       pageNumber: pageNumber,
                       signid: signid,
@@ -779,6 +813,10 @@
                 keyWordSignNotLoadedData.push(e);
               }
             });
+
+            if (result !== '') {
+              PDFViewerApplication.appConfig.sidebar.annotationView.innerHTML += result;
+            }
           };
         } else {
           alert('此pdf无 keyword 关键字');
@@ -858,7 +896,7 @@
      * 搜索关键字
      * @param {String} keyword 搜索内容
      */
-    search: function(keyword) {
+    search: function (keyword) {
       if (!window.PDFViewerApplication) {
         console.error('请确保 pdf 加载完毕再调用此 api');
         return;
@@ -1180,30 +1218,6 @@
   }
 
   /**
-   * addToAnnotationView 添加到数字签名区域
-   * @param {Object} data 签章的数据
-   */
-  function addToAnnotationView(data) {
-    data.signdate = getDate(data.signdate);
-    data.signImg = 'data:image/png;base64,' + data.signImg;
-
-    PDFViewerApplication.appConfig.sidebar.annotationView.innerHTML +=
-      `<div class="annotationView-item" data-id="${data.signid}">
-        <p>${data.signid}</p>
-        <div>
-          <img src="${data.signImg}" alt="" />
-        </div>
-        <p>${data.integrityText || ''}</p>
-        <p>原因：${data.reason}</p>
-        <p>项目名称：签章工具</p>
-        <p>用户名称：${data.cert.signer}</p>
-        <p>印章名称：电子签章</p>
-        <p>UK序列号：${data.cert.serialNumber}</p>
-        <p>签章时间：${data.signdate}</p>
-      </div>`
-  }
-
-  /**
    * 创建签章状态标识
    * @param {String} status 签章是否成功 success or error
    * @param {String} signId 签章标识
@@ -1396,7 +1410,8 @@
           let imgWidth = this.width,
             imgHeight = this.height;
 
-          let that = this;
+          let that = this,
+            result = '';
 
           $.each(keyWordSignNotLoadedData, function (i, e) {
             let pageNumber = e.page;
@@ -1423,7 +1438,8 @@
                 2,
                 tmp = {},
                 signid = e.signid,
-                isIntegrity = e.isIntegrity;
+                isIntegrity = e.isIntegrity,
+                signDate = getDate(e.signdate);
 
               signImgEl.src = that.src;
               signEl.className = '_addSign';
@@ -1455,9 +1471,21 @@
               }
 
               window.signCount += 1;
+              result +=
+                `<div class="annotationView-item" data-id="${signid}">
+                  <p>${signid}</p>
+                  <div>
+                    <img src="${imgSrc}" alt="" />
+                  </div>
+                  <p>${e.integrityText || ''}</p>
+                  <p>原因：${e.reason}</p>
+                  <p>项目名称：签章工具</p>
+                  <p>用户名称：${e.cert.signer}</p>
+                  <p>印章名称：电子签章</p>
+                  <p>UK序列号：${e.cert.serialNumber}</p>
+                  <p>签章时间：${signDate}</p>
+                </div>`;
 
-              // 添加到数字签名区域
-              addToAnnotationView(e);
               signElArray.push({
                 pageNumber: pageNumber,
                 signid: signid,
@@ -1476,6 +1504,11 @@
             });
           });
 
+          if (result !== '') {
+            PDFViewerApplication.appConfig.sidebar.annotationView.innerHTML +=
+              result;
+          }
+
           keyWordSignNotLoadedData = keyWordSignNotLoadedData.filter(
             function (e) {
               return e !== undefined;
@@ -1492,8 +1525,9 @@
         const imgEl = document.createElement('img');
 
         imgEl.src = $signaturePreview.find('img').prop('src');
-        imgEl.onload = function() {
-          createPagingSealSign(imgEl, _pagesCount, PDFViewerApplication.pdfViewer.pagesCount);
+        imgEl.onload = function () {
+          createPagingSealSign(imgEl, _pagesCount, PDFViewerApplication
+            .pdfViewer.pagesCount);
         };
       }
     }
